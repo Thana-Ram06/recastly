@@ -25,77 +25,65 @@ async function getAdminStats() {
   };
 }
 
-async function verifyAdmin() {
-  const headersList = await headers();
-  const authHeader = headersList.get('authorization') || '';
-  const adminEmails = (process.env.ADMIN_EMAILS || '').split(',').map((e) => e.trim());
-
-  try {
-    const token = authHeader.replace('Bearer ', '');
-    if (!token) return false;
-    const decoded = await adminAuth.verifyIdToken(token);
-    return adminEmails.includes(decoded.email || '');
-  } catch {
-    return false;
-  }
-}
-
 export default async function AdminPage() {
   const stats = await getAdminStats();
 
   const cards = [
-    { label: 'Total Users', value: stats.totalUsers, icon: Users, color: 'text-blue-500', bg: 'bg-blue-50 dark:bg-blue-950/40' },
-    { label: 'Total Generations', value: stats.totalGenerations, icon: Zap, color: 'text-brand-500', bg: 'bg-brand-50 dark:bg-brand-950/40' },
-    { label: 'Active Subscriptions', value: stats.activeSubscriptions, icon: CreditCard, color: 'text-emerald-500', bg: 'bg-emerald-50 dark:bg-emerald-950/40' },
-    { label: 'Paying Users %', value: stats.totalUsers > 0 ? `${Math.round((stats.activeSubscriptions / stats.totalUsers) * 100)}%` : '0%', icon: TrendingUp, color: 'text-violet-500', bg: 'bg-violet-50 dark:bg-violet-950/40' },
+    { label: 'Total Users', value: stats.totalUsers, icon: Users, color: 'text-blue-400' },
+    { label: 'Generations', value: stats.totalGenerations, icon: Zap, color: 'text-brand-400' },
+    { label: 'Active Subs', value: stats.activeSubscriptions, icon: CreditCard, color: 'text-emerald-400' },
+    {
+      label: 'Conversion',
+      value: stats.totalUsers > 0 ? `${Math.round((stats.activeSubscriptions / stats.totalUsers) * 100)}%` : '0%',
+      icon: TrendingUp,
+      color: 'text-violet-400',
+    },
   ];
 
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 p-6">
+    <div className="min-h-screen bg-zinc-950 p-6">
       <div className="max-w-5xl mx-auto">
         <div className="flex items-center gap-3 mb-8">
-          <div className="h-9 w-9 rounded-xl bg-brand-500 flex items-center justify-center">
-            <Activity className="h-5 w-5 text-white" />
+          <div className="h-8 w-8 rounded-lg bg-brand-600 flex items-center justify-center">
+            <Activity className="h-4 w-4 text-white" />
           </div>
-          <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">Admin Dashboard</h1>
+          <h1 className="text-lg font-semibold text-zinc-100">Admin</h1>
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          {cards.map(({ label, value, icon: Icon, color, bg }) => (
-            <div key={label} className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-5 shadow-card">
-              <div className={`h-9 w-9 rounded-xl ${bg} flex items-center justify-center mb-3`}>
-                <Icon className={`h-4 w-4 ${color}`} />
-              </div>
-              <p className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">{value}</p>
-              <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-0.5">{label}</p>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
+          {cards.map(({ label, value, icon: Icon, color }) => (
+            <div key={label} className="rounded-xl border border-white/6 bg-zinc-900/60 p-4">
+              <Icon className={`h-4 w-4 ${color} mb-3`} />
+              <p className="text-xl font-bold text-zinc-100">{value}</p>
+              <p className="text-xs text-zinc-600 mt-0.5">{label}</p>
             </div>
           ))}
         </div>
 
         {/* Recent generations */}
-        <div className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900">
-          <div className="px-5 py-4 border-b border-zinc-100 dark:border-zinc-800">
-            <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">Recent Generations</h2>
+        <div className="rounded-xl border border-white/6 bg-zinc-900/60 overflow-hidden">
+          <div className="px-4 py-3 border-b border-white/5">
+            <h2 className="text-xs font-semibold text-zinc-400">Recent Generations</h2>
           </div>
-          <div className="divide-y divide-zinc-100 dark:divide-zinc-800">
+          <div className="divide-y divide-white/4">
             {stats.recent.length === 0 && (
-              <p className="px-5 py-6 text-sm text-zinc-400">No generations yet.</p>
+              <p className="px-4 py-6 text-xs text-zinc-600">No generations yet.</p>
             )}
             {stats.recent.map((gen: Record<string, unknown>, i: number) => (
-              <div key={String(gen.id || i)} className="px-5 py-3 flex items-center gap-3">
-                <div className="h-7 w-7 rounded-lg bg-red-50 dark:bg-red-950/40 flex items-center justify-center flex-shrink-0">
-                  <Zap className="h-3.5 w-3.5 text-red-500" />
+              <div key={String(gen.id || i)} className="px-4 py-3 flex items-center gap-3">
+                <div className="h-6 w-6 rounded bg-red-950/40 flex items-center justify-center shrink-0">
+                  <Zap className="h-3 w-3 text-red-500" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs font-medium text-zinc-900 dark:text-zinc-100 truncate">
+                  <p className="text-xs text-zinc-300 truncate">
                     {String(gen.youtubeUrl || '')}
                   </p>
-                  <p className="text-xs text-zinc-400 dark:text-zinc-500">
+                  <p className="text-[11px] text-zinc-600">
                     uid: {String(gen.uid || '').slice(0, 8)}…
                   </p>
                 </div>
-                <span className="text-xs text-zinc-400 dark:text-zinc-500 flex-shrink-0">
+                <span className="text-[11px] text-zinc-700 shrink-0">
                   {gen.createdAt ? new Date(Number(gen.createdAt)).toLocaleDateString() : '—'}
                 </span>
               </div>

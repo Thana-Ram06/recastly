@@ -1,6 +1,6 @@
 'use client';
 
-import { Zap, Crown, TrendingUp } from 'lucide-react';
+import { Zap, Crown, Layers } from 'lucide-react';
 import { useSubscription } from '@/hooks/useSubscription';
 import Link from 'next/link';
 import { cn } from '@/utils/helpers';
@@ -10,45 +10,46 @@ export function UsageStats() {
 
   const pct = usageLimit ? Math.min((usageCount / usageLimit) * 100, 100) : 0;
   const isNearLimit = usageLimit ? usageCount >= usageLimit * 0.8 : false;
+  const remaining = usageLimit === null ? null : Math.max(0, (usageLimit || 0) - usageCount);
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+    <div className="grid grid-cols-3 gap-3">
       {/* Plan */}
-      <div className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-4">
-        <div className="flex items-center gap-2 mb-2">
-          <Crown className="h-4 w-4 text-amber-500" />
-          <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">Current plan</span>
+      <div className="rounded-xl border border-white/6 bg-zinc-900/60 p-3.5">
+        <div className="flex items-center gap-1.5 mb-2">
+          <Crown className="h-3.5 w-3.5 text-amber-400 shrink-0" />
+          <span className="text-[10px] font-medium text-zinc-600 uppercase tracking-wider">Plan</span>
         </div>
-        <p className="text-xl font-bold text-zinc-900 dark:text-zinc-100 capitalize">{plan}</p>
+        <p className="text-base font-semibold text-zinc-200 capitalize">{plan}</p>
         {plan !== 'pro' && (
-          <Link href="/settings" className="mt-1 text-xs text-brand-600 dark:text-brand-400 hover:underline">
+          <Link href="/settings" className="mt-0.5 text-[11px] text-brand-400 hover:text-brand-300 transition-colors">
             Upgrade →
           </Link>
         )}
       </div>
 
       {/* Usage */}
-      <div className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-4">
-        <div className="flex items-center gap-2 mb-2">
-          <Zap className="h-4 w-4 text-brand-500" />
-          <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">This month</span>
+      <div className="rounded-xl border border-white/6 bg-zinc-900/60 p-3.5">
+        <div className="flex items-center gap-1.5 mb-2">
+          <Zap className="h-3.5 w-3.5 text-brand-400 shrink-0" />
+          <span className="text-[10px] font-medium text-zinc-600 uppercase tracking-wider">This month</span>
         </div>
         {loading ? (
-          <div className="h-6 w-16 rounded bg-zinc-200 dark:bg-zinc-800 animate-pulse" />
+          <div className="h-5 w-12 rounded bg-white/5 shimmer" />
         ) : (
-          <p className="text-xl font-bold text-zinc-900 dark:text-zinc-100">
+          <p className="text-base font-semibold text-zinc-200">
             {usageCount}
-            <span className="text-sm font-normal text-zinc-400 dark:text-zinc-500 ml-1">
-              {usageLimit ? `/ ${usageLimit}` : '/ unlimited'}
-            </span>
+            {usageLimit && (
+              <span className="text-xs font-normal text-zinc-600 ml-1">/ {usageLimit}</span>
+            )}
           </p>
         )}
-        {usageLimit && (
-          <div className="mt-2 h-1.5 w-full rounded-full bg-zinc-100 dark:bg-zinc-800 overflow-hidden">
+        {usageLimit && !loading && (
+          <div className="mt-2 h-1 w-full rounded-full bg-white/6 overflow-hidden">
             <div
               className={cn(
-                'h-full rounded-full transition-all',
-                isNearLimit ? 'bg-amber-500' : 'bg-brand-500'
+                'h-full rounded-full transition-all duration-500',
+                isNearLimit ? 'bg-amber-400' : 'bg-brand-500'
               )}
               style={{ width: `${pct}%` }}
             />
@@ -56,16 +57,16 @@ export function UsageStats() {
         )}
       </div>
 
-      {/* All-time */}
-      <div className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-4">
-        <div className="flex items-center gap-2 mb-2">
-          <TrendingUp className="h-4 w-4 text-emerald-500" />
-          <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">Generations left</span>
+      {/* Remaining */}
+      <div className="rounded-xl border border-white/6 bg-zinc-900/60 p-3.5">
+        <div className="flex items-center gap-1.5 mb-2">
+          <Layers className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
+          <span className="text-[10px] font-medium text-zinc-600 uppercase tracking-wider">Remaining</span>
         </div>
-        <p className="text-xl font-bold text-zinc-900 dark:text-zinc-100">
-          {usageLimit === null ? '∞' : Math.max(0, (usageLimit || 0) - usageCount)}
+        <p className="text-base font-semibold text-zinc-200">
+          {remaining === null ? '∞' : remaining}
         </p>
-        <p className="text-xs text-zinc-400 dark:text-zinc-500 mt-0.5">Resets monthly</p>
+        <p className="text-[11px] text-zinc-600 mt-0.5">Resets monthly</p>
       </div>
     </div>
   );

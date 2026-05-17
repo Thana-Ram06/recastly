@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { Check, Zap } from 'lucide-react';
+import { Check } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { cn } from '@/utils/helpers';
 
@@ -10,13 +10,8 @@ const plans = [
   {
     name: 'Free',
     price: 0,
-    description: 'Try it out. No credit card required.',
-    features: [
-      '1 generation per month',
-      'All 4 platforms',
-      'LinkedIn, X, Newsletter, Instagram',
-      'Copy to clipboard',
-    ],
+    description: 'Try it out. No credit card.',
+    features: ['1 generation / month', 'All 4 platforms', 'Copy to clipboard'],
     cta: 'Get started free',
     href: '/login',
     featured: false,
@@ -24,14 +19,8 @@ const plans = [
   {
     name: 'Starter',
     price: 9,
-    description: 'For consistent creators building their audience.',
-    features: [
-      '10 generations per month',
-      'All 4 platforms',
-      'Generation history',
-      'Priority support',
-      'Regenerate any output',
-    ],
+    description: 'For consistent creators.',
+    features: ['10 generations / month', 'All 4 platforms', 'Generation history', 'Priority support'],
     cta: 'Start with Starter',
     href: '/login',
     featured: true,
@@ -40,15 +29,8 @@ const plans = [
   {
     name: 'Pro',
     price: 29,
-    description: 'For power creators and agencies.',
-    features: [
-      'Unlimited generations',
-      'All 4 platforms',
-      'Full generation history',
-      'Priority support',
-      'Early access to new features',
-      'Team-ready',
-    ],
+    description: 'For power creators and teams.',
+    features: ['Unlimited generations', 'All 4 platforms', 'Full history', 'Priority support', 'Early access'],
     cta: 'Go Pro',
     href: '/login',
     featured: false,
@@ -57,65 +39,62 @@ const plans = [
 
 export function Pricing() {
   return (
-    <section id="pricing" className="py-24 px-4 sm:px-6">
-      <div className="max-w-5xl mx-auto">
+    <section id="pricing" className="py-24 px-5 sm:px-6">
+      <div className="max-w-4xl mx-auto">
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          transition={{ duration: 0.5 }}
+          className="mb-14"
         >
-          <p className="text-sm font-semibold text-brand-600 dark:text-brand-400 uppercase tracking-wider mb-3">
-            Pricing
-          </p>
-          <h2 className="font-serif text-4xl sm:text-5xl text-zinc-900 dark:text-zinc-50 mb-4">
-            Simple, transparent pricing
+          <p className="text-xs font-semibold text-brand-400 uppercase tracking-widest mb-3">Pricing</p>
+          <h2 className="font-serif text-4xl sm:text-5xl text-zinc-100 leading-[1.08] tracking-tight mb-4">
+            Simple, honest pricing
           </h2>
-          <p className="text-lg text-zinc-500 dark:text-zinc-400">
-            Start free. Upgrade when you're ready. No lock-in.
-          </p>
+          <p className="text-zinc-400 leading-relaxed">Start free. Upgrade when you're ready. Cancel anytime.</p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           {plans.map(({ name, price, description, features, cta, href, featured, badge }, i) => (
             <motion.div
               key={name}
-              initial={{ opacity: 0, y: 24 }}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.1, duration: 0.5 }}
+              transition={{ delay: i * 0.08, duration: 0.45 }}
               className={cn(
-                'relative rounded-2xl p-6 flex flex-col',
+                'relative rounded-xl p-6 flex flex-col',
                 featured
-                  ? 'border-2 border-brand-500 bg-white dark:bg-zinc-900 shadow-brand'
-                  : 'border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-card'
+                  ? 'gradient-border bg-zinc-900'
+                  : 'border border-white/6 bg-zinc-900/50'
               )}
             >
               {badge && (
-                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-500 text-white text-xs font-semibold">
-                    <Zap className="h-3 w-3" />
+                <div className="absolute -top-3 left-5">
+                  <span className="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-brand-600 text-white">
                     {badge}
                   </span>
                 </div>
               )}
 
-              <div className="mb-5">
-                <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100 mb-1">{name}</h3>
-                <p className="text-sm text-zinc-500 dark:text-zinc-400">{description}</p>
+              <div className="mb-6">
+                <h3 className="text-sm font-semibold text-zinc-200 mb-1">{name}</h3>
+                <p className="text-xs text-zinc-500">{description}</p>
               </div>
 
               <div className="mb-6">
-                <span className="text-4xl font-bold text-zinc-900 dark:text-zinc-100">${price}</span>
-                <span className="text-sm text-zinc-500 dark:text-zinc-400 ml-1">/month</span>
+                <div className="flex items-end gap-1">
+                  <span className="text-4xl font-bold tracking-tight text-zinc-100">${price}</span>
+                  <span className="text-sm text-zinc-500 mb-1">/mo</span>
+                </div>
               </div>
 
-              <ul className="space-y-3 mb-8 flex-1">
+              <ul className="space-y-2.5 mb-8 flex-1">
                 {features.map((f) => (
-                  <li key={f} className="flex items-start gap-2.5">
-                    <Check className={cn('h-4 w-4 mt-0.5 flex-shrink-0', featured ? 'text-brand-500' : 'text-emerald-500')} />
-                    <span className="text-sm text-zinc-600 dark:text-zinc-400">{f}</span>
+                  <li key={f} className="flex items-center gap-2.5">
+                    <Check className={cn('h-3.5 w-3.5 shrink-0', featured ? 'text-brand-400' : 'text-zinc-500')} />
+                    <span className="text-sm text-zinc-400">{f}</span>
                   </li>
                 ))}
               </ul>
@@ -136,10 +115,10 @@ export function Pricing() {
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          transition={{ delay: 0.4 }}
-          className="text-center text-sm text-zinc-400 dark:text-zinc-500 mt-8"
+          transition={{ delay: 0.3 }}
+          className="text-center text-xs text-zinc-600 mt-8"
         >
-          All plans include access to Claude AI &middot; Cancel anytime &middot; Secure payment via Stripe
+          All plans include Gemini 2.5 Flash · Secure payment via Stripe · No lock-in
         </motion.p>
       </div>
     </section>

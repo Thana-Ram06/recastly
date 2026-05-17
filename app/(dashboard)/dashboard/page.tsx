@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Mail } from 'lucide-react';
-import { LinkedinIcon, XIcon, InstagramIcon } from '@/components/ui/BrandIcons';
+import { LinkedinIcon, XIcon, InstagramIcon, YoutubeIcon } from '@/components/ui/BrandIcons';
 import { TopNav } from '@/components/dashboard/TopNav';
 import { URLInput } from '@/components/dashboard/URLInput';
 import { ContentCard } from '@/components/dashboard/ContentCard';
@@ -13,47 +13,44 @@ import { useSubscription } from '@/hooks/useSubscription';
 import type { Generation } from '@/types';
 import type { LucideIcon } from 'lucide-react';
 import type { SVGProps } from 'react';
+import { cn } from '@/utils/helpers';
 
+type TabKey = 'linkedin' | 'twitter' | 'newsletter' | 'instagram';
 type IconComponent = LucideIcon | ((props: SVGProps<SVGSVGElement>) => React.ReactElement);
 
-const platformCards: {
-  key: string;
+const tabs: {
+  key: TabKey;
   title: string;
   icon: IconComponent;
   iconColor: string;
-  iconBg: string;
   getContents: (g: Generation) => string[];
 }[] = [
   {
     key: 'linkedin',
-    title: 'LinkedIn Posts',
+    title: 'LinkedIn',
     icon: LinkedinIcon,
-    iconColor: 'text-blue-600',
-    iconBg: 'bg-blue-50 dark:bg-blue-950/50',
+    iconColor: 'text-blue-400',
     getContents: (g) => g.linkedinPosts,
   },
   {
     key: 'twitter',
-    title: 'X / Twitter Threads',
+    title: 'X / Twitter',
     icon: XIcon,
-    iconColor: 'text-zinc-800 dark:text-zinc-200',
-    iconBg: 'bg-zinc-100 dark:bg-zinc-800/60',
-    getContents: (g) => g.twitterThreads.map((thread) => thread.join('\n\n')),
+    iconColor: 'text-zinc-300',
+    getContents: (g) => g.twitterThreads.map((t) => t.join('\n\n')),
   },
   {
     key: 'newsletter',
     title: 'Newsletter',
     icon: Mail,
-    iconColor: 'text-violet-600',
-    iconBg: 'bg-violet-50 dark:bg-violet-950/50',
+    iconColor: 'text-violet-400',
     getContents: (g) => [g.newsletter],
   },
   {
     key: 'instagram',
-    title: 'Instagram Captions',
+    title: 'Instagram',
     icon: InstagramIcon,
-    iconColor: 'text-pink-500',
-    iconBg: 'bg-pink-50 dark:bg-pink-950/50',
+    iconColor: 'text-pink-400',
     getContents: (g) => g.instagramCaptions,
   },
 ];
@@ -64,6 +61,7 @@ export default function DashboardPage() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [generation, setGeneration] = useState<Generation | null>(null);
   const [error, setError] = useState('');
+  const [activeTab, setActiveTab] = useState<TabKey>('linkedin');
 
   const handleGenerate = async (url: string) => {
     setIsGenerating(true);
@@ -74,20 +72,13 @@ export default function DashboardPage() {
       const token = await getToken();
       const res = await fetch('/api/generate', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({ youtubeUrl: url }),
       });
-
       const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.error || 'Failed to generate content.');
-      }
-
+      if (!res.ok) throw new Error(data.error || 'Failed to generate content.');
       setGeneration(data.generation);
+      setActiveTab('linkedin');
       await refetch();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
@@ -97,72 +88,130 @@ export default function DashboardPage() {
     }
   };
 
+  const activeTabConfig = tabs.find((t) => t.key === activeTab)!;
+
   return (
     <div className="flex flex-col min-h-screen">
       <TopNav title="Dashboard" />
 
-      <main className="flex-1 p-4 sm:p-6 max-w-5xl w-full mx-auto space-y-6">
+      <main className="flex-1 px-4 sm:px-6 py-6 max-w-3xl w-full mx-auto space-y-5">
+        {/* Usage */}
         <UsageStats />
 
-        <section>
-          <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-100 mb-3">Generate content</h2>
-          <URLInput
-            onGenerate={handleGenerate}
-            isGenerating={isGenerating}
-            hasReachedLimit={hasReachedLimit}
-          />
-        </section>
+        {/* URL Input */}
+        <URLInput
+          onGenerate={handleGenerate}
+          isGenerating={isGenerating}
+          hasReachedLimit={hasReachedLimit}
+        />
 
-        {error && !isGenerating && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="rounded-xl border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950/40 p-4 text-sm text-red-600 dark:text-red-400"
-          >
-            {error}
-          </motion.div>
-        )}
-
+        {/* Error */}
         <AnimatePresence>
-          {(isGenerating || generation) && (
-            <motion.section
-              initial={{ opacity: 0, y: 16 }}
+          {error && !isGenerating && (
+            <motion.div
+              initial={{ opacity: 0, y: -4 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
+              exit={{ opacity: 0 }}
+              className="rounded-lg border border-red-500/20 bg-red-500/8 px-4 py-3 text-xs text-red-400"
             >
-              <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-100 mb-3">
-                {isGenerating ? 'Generating your content…' : generation?.videoTitle || 'Generated content'}
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {platformCards.map(({ key, title, icon: Icon, iconColor, iconBg, getContents }) => (
-                  <ContentCard
-                    key={key}
-                    title={title}
-                    icon={Icon as LucideIcon}
-                    iconColor={iconColor}
-                    iconBg={iconBg}
-                    contents={generation ? getContents(generation) : []}
-                    isLoading={isGenerating}
-                  />
-                ))}
-              </div>
-            </motion.section>
+              {error}
+            </motion.div>
           )}
         </AnimatePresence>
 
+        {/* Content area */}
+        <AnimatePresence>
+          {(isGenerating || generation) && (
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.35 }}
+            >
+              {/* Section header */}
+              <div className="mb-3">
+                <h2 className="text-xs font-semibold text-zinc-600 uppercase tracking-wider">
+                  {isGenerating ? 'Generating…' : (generation?.videoTitle || 'Generated content')}
+                </h2>
+              </div>
+
+              {/* Platform tabs */}
+              {!isGenerating && (
+                <div className="flex items-center gap-1 mb-4 border-b border-white/5 pb-0">
+                  {tabs.map(({ key, title, icon: Icon, iconColor }) => (
+                    <button
+                      key={key}
+                      onClick={() => setActiveTab(key)}
+                      className={cn(
+                        'flex items-center gap-1.5 px-3 py-2 text-xs font-medium border-b-2 -mb-px transition-all',
+                        activeTab === key
+                          ? 'border-brand-500 text-zinc-100'
+                          : 'border-transparent text-zinc-600 hover:text-zinc-400 hover:border-zinc-700'
+                      )}
+                    >
+                      <Icon className={cn('h-3 w-3', activeTab === key ? iconColor : '')} />
+                      {title}
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {/* Card */}
+              <AnimatePresence mode="wait">
+                {isGenerating ? (
+                  <motion.div
+                    key="loading"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="grid grid-cols-1 sm:grid-cols-2 gap-3"
+                  >
+                    {tabs.map(({ key, title, icon, iconColor }) => (
+                      <ContentCard
+                        key={key}
+                        title={title}
+                        icon={icon as LucideIcon}
+                        iconColor={iconColor}
+                        contents={[]}
+                        isLoading
+                      />
+                    ))}
+                  </motion.div>
+                ) : generation ? (
+                  <motion.div
+                    key={activeTab}
+                    initial={{ opacity: 0, x: 8 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -8 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <ContentCard
+                      title={activeTabConfig.title}
+                      icon={activeTabConfig.icon as LucideIcon}
+                      iconColor={activeTabConfig.iconColor}
+                      contents={activeTabConfig.getContents(generation)}
+                    />
+                  </motion.div>
+                ) : null}
+              </AnimatePresence>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Empty state */}
         {!isGenerating && !generation && !error && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.3 }}
-            className="flex flex-col items-center justify-center py-20 text-center"
+            transition={{ delay: 0.2 }}
+            className="flex flex-col items-center justify-center py-24 text-center"
           >
-            <div className="h-14 w-14 rounded-2xl bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center mb-4">
-              <LinkedinIcon className="h-7 w-7 text-zinc-400 dark:text-zinc-500" />
+            <div className="h-12 w-12 rounded-xl border border-white/6 bg-white/3 flex items-center justify-center mb-4">
+              <YoutubeIcon className="h-5 w-5 text-zinc-700" />
             </div>
-            <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-100 mb-1">No content yet</h3>
-            <p className="text-sm text-zinc-500 dark:text-zinc-400 max-w-xs">
-              Paste a YouTube URL above to generate LinkedIn posts, Twitter threads, a newsletter, and Instagram captions instantly.
+            <h3 className="text-sm font-medium text-zinc-400 mb-1">No content yet</h3>
+            <p className="text-xs text-zinc-600 max-w-xs leading-relaxed">
+              Paste a YouTube URL above to generate LinkedIn posts, X threads, a newsletter, and Instagram captions.
             </p>
           </motion.div>
         )}

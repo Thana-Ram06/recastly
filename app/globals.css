@@ -6,6 +6,27 @@
   :root {
     --font-inter: 'Inter', system-ui, sans-serif;
     --font-instrument-serif: 'Instrument Serif', Georgia, serif;
+
+    /* Light mode tokens */
+    --bg:          255 255 255;
+    --surface:     249 249 251;
+    --surface-2:   243 244 246;
+    --border:      229 231 235;
+    --border-sub:  243 244 246;
+    --text-1:      9 9 11;
+    --text-2:      82 82 91;
+    --text-3:      161 161 170;
+  }
+
+  .dark {
+    --bg:          9 9 11;
+    --surface:     14 14 18;
+    --surface-2:   24 24 27;
+    --border:      39 39 42;
+    --border-sub:  30 30 34;
+    --text-1:      244 244 245;
+    --text-2:      161 161 170;
+    --text-3:      82 82 91;
   }
 
   * {
@@ -16,6 +37,7 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     scroll-behavior: smooth;
+    text-rendering: optimizeLegibility;
   }
 
   body {
@@ -23,32 +45,84 @@
   }
 
   ::selection {
-    @apply bg-brand-100 dark:bg-brand-900 text-brand-900 dark:text-brand-100;
+    background: rgba(139, 92, 246, 0.2);
+    color: #c4b5fd;
   }
 
   :focus-visible {
-    @apply outline-none ring-2 ring-brand-500 ring-offset-2;
+    @apply outline-none ring-2 ring-brand-500 ring-offset-2 ring-offset-white dark:ring-offset-zinc-950;
   }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 99px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.14); }
 }
 
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+  .text-balance { text-wrap: balance; }
 
   .scrollbar-none {
     scrollbar-width: none;
     -ms-overflow-style: none;
   }
-  .scrollbar-none::-webkit-scrollbar {
-    display: none;
+  .scrollbar-none::-webkit-scrollbar { display: none; }
+
+  /* Fine dot grid — like Linear */
+  .bg-dot-grid {
+    background-image: radial-gradient(circle, rgba(255,255,255,0.12) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+  .light .bg-dot-grid,
+  :not(.dark) .bg-dot-grid {
+    background-image: radial-gradient(circle, rgba(0,0,0,0.06) 1px, transparent 1px);
+    background-size: 24px 24px;
   }
 
-  .bg-grid {
-    background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000' fill-opacity='0.03'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  /* Shimmer loading effect */
+  .shimmer {
+    position: relative;
+    overflow: hidden;
+  }
+  .shimmer::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.04) 50%, transparent 100%);
+    animation: shimmer 1.8s linear infinite;
   }
 
-  .dark .bg-grid {
-    background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23fff' fill-opacity='0.02'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  /* Gradient border utility */
+  .gradient-border {
+    background: linear-gradient(rgb(var(--surface-2)), rgb(var(--surface-2))) padding-box,
+                linear-gradient(135deg, rgba(139,92,246,0.6), rgba(167,139,250,0.3), rgba(139,92,246,0.1)) border-box;
+    border: 1px solid transparent;
   }
+
+  /* Frosted glass */
+  .glass {
+    backdrop-filter: blur(16px) saturate(150%);
+    -webkit-backdrop-filter: blur(16px) saturate(150%);
+  }
+
+  /* Text gradient */
+  .text-gradient {
+    background: linear-gradient(135deg, #c4b5fd 0%, #8b5cf6 50%, #a78bfa 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-gradient-white {
+    background: linear-gradient(180deg, #ffffff 0%, rgba(255,255,255,0.75) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Surface colors via CSS vars */
+  .bg-surface   { background: rgb(var(--surface)); }
+  .bg-surface-2 { background: rgb(var(--surface-2)); }
+  .border-token { border-color: rgb(var(--border)); }
 }

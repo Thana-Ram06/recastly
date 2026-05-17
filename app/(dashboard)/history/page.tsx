@@ -36,66 +36,66 @@ export default function HistoryPage() {
   }, [getToken]);
 
   const platforms = [
-    { icon: LinkedinIcon, label: 'LinkedIn', color: 'text-blue-600' },
-    { icon: XIcon, label: 'X', color: 'text-zinc-700 dark:text-zinc-300' },
-    { icon: Mail, label: 'Newsletter', color: 'text-violet-600' },
-    { icon: InstagramIcon, label: 'Instagram', color: 'text-pink-500' },
+    { icon: LinkedinIcon, label: 'LinkedIn', color: 'text-blue-400' },
+    { icon: XIcon, label: 'X', color: 'text-zinc-300' },
+    { icon: Mail, label: 'Newsletter', color: 'text-violet-400' },
+    { icon: InstagramIcon, label: 'Instagram', color: 'text-pink-400' },
   ];
 
   return (
     <div className="flex flex-col min-h-screen">
       <TopNav title="History" />
 
-      <main className="flex-1 p-4 sm:p-6 max-w-4xl w-full mx-auto">
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-xl font-bold text-zinc-900 dark:text-zinc-100">Generation History</h1>
-          <span className="text-sm text-zinc-500 dark:text-zinc-400">{generations.length} generations</span>
+      <main className="flex-1 px-4 sm:px-6 py-6 max-w-3xl w-full mx-auto">
+        <div className="flex items-center justify-between mb-5">
+          <h1 className="text-sm font-semibold text-zinc-300">Generation History</h1>
+          {!loading && (
+            <span className="text-xs text-zinc-600">{generations.length} generations</span>
+          )}
         </div>
 
         {loading ? (
-          <div className="space-y-3">
+          <div className="space-y-2.5">
             {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="h-20 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 animate-pulse" />
+              <div key={i} className="h-16 rounded-xl border border-white/6 bg-zinc-900/60 shimmer" />
             ))}
           </div>
         ) : generations.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-24 text-center">
-            <div className="h-14 w-14 rounded-2xl bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center mb-4">
-              <Clock className="h-7 w-7 text-zinc-400" />
+            <div className="h-12 w-12 rounded-xl border border-white/6 bg-white/3 flex items-center justify-center mb-4">
+              <Clock className="h-5 w-5 text-zinc-700" />
             </div>
-            <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-100 mb-1">No history yet</h3>
-            <p className="text-sm text-zinc-500 dark:text-zinc-400">
+            <h3 className="text-sm font-medium text-zinc-400 mb-1">No history yet</h3>
+            <p className="text-xs text-zinc-600 max-w-xs leading-relaxed">
               Generate content from a YouTube URL to see your history here.
             </p>
           </div>
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-2">
             {generations.map((gen, i) => (
               <motion.div
                 key={gen.id}
-                initial={{ opacity: 0, y: 12 }}
+                initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.05 }}
+                transition={{ delay: i * 0.04 }}
                 onClick={() => setSelected(selected?.id === gen.id ? null : gen)}
-                className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-4 cursor-pointer hover:border-brand-300 dark:hover:border-brand-700 transition-all shadow-card"
+                className="rounded-xl border border-white/6 bg-zinc-900/60 p-4 cursor-pointer hover:border-white/10 hover:bg-zinc-900/80 transition-all"
               >
                 <div className="flex items-start gap-3">
-                  <div className="h-8 w-8 rounded-lg bg-red-50 dark:bg-red-950/50 flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <YoutubeIcon className="h-4 w-4 text-red-500" />
+                  <div className="h-7 w-7 rounded-lg bg-red-950/40 border border-red-900/30 flex items-center justify-center shrink-0 mt-0.5">
+                    <YoutubeIcon className="h-3.5 w-3.5 text-red-500" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100 truncate">
+                    <p className="text-xs font-medium text-zinc-200 truncate">
                       {gen.videoTitle || truncateText(gen.youtubeUrl, 60)}
                     </p>
                     <div className="flex items-center gap-3 mt-1.5">
                       <div className="flex gap-2">
                         {platforms.map(({ icon: Icon, label, color }) => (
-                          <span key={label} title={label}>
-                            <Icon className={`h-3.5 w-3.5 ${color}`} />
-                          </span>
+                          <Icon key={label} className={`h-3 w-3 ${color}`} />
                         ))}
                       </div>
-                      <span className="text-xs text-zinc-400 dark:text-zinc-500">
+                      <span className="text-[11px] text-zinc-600">
                         {formatRelativeTime(gen.createdAt)}
                       </span>
                     </div>
@@ -105,9 +105,9 @@ export default function HistoryPage() {
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={(e) => e.stopPropagation()}
-                    className="h-7 w-7 flex items-center justify-center rounded-lg text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-all flex-shrink-0"
+                    className="h-6 w-6 flex items-center justify-center rounded text-zinc-700 hover:text-zinc-400 hover:bg-white/5 transition-all shrink-0"
                   >
-                    <ExternalLink className="h-3.5 w-3.5" />
+                    <ExternalLink className="h-3 w-3" />
                   </a>
                 </div>
 
@@ -115,20 +115,20 @@ export default function HistoryPage() {
                   <motion.div
                     initial={{ opacity: 0, height: 0 }}
                     animate={{ opacity: 1, height: 'auto' }}
-                    className="mt-4 pt-4 border-t border-zinc-100 dark:border-zinc-800 grid grid-cols-1 sm:grid-cols-2 gap-3"
+                    className="mt-4 pt-4 border-t border-white/5 grid grid-cols-1 sm:grid-cols-2 gap-2.5"
                   >
                     {gen.linkedinPosts[0] && (
-                      <div className="rounded-lg bg-zinc-50 dark:bg-zinc-800/50 p-3">
-                        <p className="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-1.5">LinkedIn Post 1</p>
-                        <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed line-clamp-4">
+                      <div className="rounded-lg border border-white/5 bg-zinc-800/40 p-3">
+                        <p className="text-[10px] font-semibold text-blue-400 mb-1.5 uppercase tracking-wider">LinkedIn</p>
+                        <p className="text-xs text-zinc-500 leading-relaxed line-clamp-4">
                           {gen.linkedinPosts[0]}
                         </p>
                       </div>
                     )}
                     {gen.newsletter && (
-                      <div className="rounded-lg bg-zinc-50 dark:bg-zinc-800/50 p-3">
-                        <p className="text-xs font-semibold text-violet-600 dark:text-violet-400 mb-1.5">Newsletter</p>
-                        <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed line-clamp-4">
+                      <div className="rounded-lg border border-white/5 bg-zinc-800/40 p-3">
+                        <p className="text-[10px] font-semibold text-violet-400 mb-1.5 uppercase tracking-wider">Newsletter</p>
+                        <p className="text-xs text-zinc-500 leading-relaxed line-clamp-4">
                           {gen.newsletter}
                         </p>
                       </div>

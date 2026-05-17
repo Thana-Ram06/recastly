@@ -3,7 +3,6 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { Zap } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { useAuth } from '@/hooks/useAuth';
 
@@ -23,9 +22,7 @@ export default function LoginPage() {
   const router = useRouter();
 
   useEffect(() => {
-    if (user && !loading) {
-      router.push('/dashboard');
-    }
+    if (user && !loading) router.push('/dashboard');
   }, [user, loading, router]);
 
   const handleLogin = async () => {
@@ -37,41 +34,45 @@ export default function LoginPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-white dark:bg-zinc-950">
-        <div className="animate-spin h-8 w-8 rounded-full border-2 border-brand-500 border-t-transparent" />
+      <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
+        <div className="h-5 w-5 rounded-full border-2 border-brand-500 border-t-transparent animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-white dark:bg-zinc-950 px-4">
+    <div className="min-h-screen bg-zinc-950 flex items-center justify-center px-4 relative overflow-hidden">
       {/* Glow */}
-      <div aria-hidden className="fixed inset-0 bg-hero-glow dark:bg-hero-glow-dark pointer-events-none" />
+      <div aria-hidden className="pointer-events-none absolute top-0 left-0 right-0 h-[50vh] bg-hero-glow opacity-60" />
+      <div aria-hidden className="pointer-events-none absolute inset-0 bg-dot-grid" />
 
       <motion.div
-        initial={{ opacity: 0, y: 24 }}
+        initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
+        transition={{ duration: 0.4 }}
         className="relative z-10 w-full max-w-sm"
       >
-        {/* Card */}
-        <div className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-soft-lg p-8 text-center">
-          {/* Logo */}
-          <div className="flex justify-center mb-6">
-            <div className="h-12 w-12 rounded-2xl bg-brand-500 flex items-center justify-center">
-              <Zap className="h-6 w-6 text-white" />
-            </div>
+        {/* Logo */}
+        <div className="flex justify-center mb-8">
+          <div className="h-10 w-10 rounded-xl bg-brand-600 flex items-center justify-center shadow-glow">
+            <svg width="18" height="18" viewBox="0 0 16 16" fill="none">
+              <path d="M3 13L8 3L13 13" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M5 10H11" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+            </svg>
           </div>
+        </div>
 
-          <h1 className="font-serif text-2xl text-zinc-900 dark:text-zinc-100 mb-2">
+        {/* Card */}
+        <div className="rounded-xl border border-white/8 bg-zinc-900/80 backdrop-blur-sm p-7 text-center">
+          <h1 className="font-serif text-2xl text-zinc-100 mb-2 tracking-tight">
             Welcome to Recastly
           </h1>
-          <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-8">
-            Sign in to start turning YouTube videos into platform-ready content.
+          <p className="text-sm text-zinc-500 mb-7 leading-relaxed">
+            Turn YouTube videos into platform-ready content in seconds.
           </p>
 
           {error && (
-            <div className="mb-4 p-3 rounded-lg bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800 text-sm text-red-600 dark:text-red-400">
+            <div className="mb-5 px-3 py-2.5 rounded-lg bg-red-500/10 border border-red-500/20 text-xs text-red-400">
               {error}
             </div>
           )}
@@ -86,16 +87,16 @@ export default function LoginPage() {
             Continue with Google
           </Button>
 
-          <p className="mt-6 text-xs text-zinc-400 dark:text-zinc-500">
-            By signing in, you agree to our{' '}
-            <a href="/terms" className="underline hover:text-zinc-600 dark:hover:text-zinc-300">Terms</a>{' '}
-            and{' '}
-            <a href="/privacy" className="underline hover:text-zinc-600 dark:hover:text-zinc-300">Privacy Policy</a>.
+          <p className="mt-6 text-[11px] text-zinc-700 leading-relaxed">
+            By continuing, you agree to our{' '}
+            <a href="/terms" className="text-zinc-500 hover:text-zinc-300 underline transition-colors">Terms</a>
+            {' '}and{' '}
+            <a href="/privacy" className="text-zinc-500 hover:text-zinc-300 underline transition-colors">Privacy Policy</a>.
           </p>
         </div>
 
-        <p className="text-center text-sm text-zinc-500 dark:text-zinc-400 mt-5">
-          New? No credit card required — start free.
+        <p className="text-center text-xs text-zinc-700 mt-5">
+          No credit card required · Free plan available
         </p>
       </motion.div>
     </div>
