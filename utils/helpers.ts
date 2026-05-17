@@ -6,14 +6,13 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function extractVideoId(url: string): string | null {
-  const patterns = [
-    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/v\/)([^&\n?#]+)/,
-    /^[a-zA-Z0-9_-]{11}$/,
-  ];
-  for (const pattern of patterns) {
-    const match = url.match(pattern);
-    if (match) return match[1];
-  }
+  // Handles: watch?v=, youtu.be/, /embed/, /v/, /shorts/
+  const match = url.match(
+    /(?:youtube\.com\/(?:watch\?v=|embed\/|v\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/
+  );
+  if (match) return match[1];
+  // Bare video ID
+  if (/^[a-zA-Z0-9_-]{11}$/.test(url)) return url;
   return null;
 }
 
@@ -77,43 +76,76 @@ export function slugify(text: string): string {
     .trim();
 }
 
-export function parseTwitterThreads(raw: string): string[][] {
-  try {
-    const parsed = JSON.parse(raw);
-    if (parsed.threads && Array.isArray(parsed.threads)) {
-      return parsed.threads.map((t: { tweets: string[] }) => t.tweets);
-    }
-    return [];
-  } catch {
-    return [];
+/**
+ * Strip markdown code fences that Gemini wraps around JSON responses.
+ * e.g. ```json\n{...}\n``` → {...}
+ */
+function extractJson(raw: string): string {
+  // Try to strip ```json ... ``` or ``` ... ``` wrappers
+  const fenced = raw.match(/```(?:json)?\s*([\s\S]*?)```/);
+  if (fenced) return fenced[1].trim();
+  // Fall back: find the first { and last } to extract raw JSON object
+  const start = raw.indexOf('{');
+  const end = raw.lastIndexOf('}');
+  if (start !== -1 && end !== -1 && end > start) {
+    return raw.slice(start, end + 1);
   }
+  return raw.trim();
 }
 
 export function parseLinkedInPosts(raw: string): string[] {
   try {
-    const parsed = JSON.parse(raw);
-    if (parsed.posts && Array.isArray(parsed.posts)) return parsed.posts;
+    const cleaned = extractJson(raw);
+    const parsed = JSON.parse(cleaned);
+    if (Array.isArray(parsed.posts) && parsed.posts.length > 0) return parsed.posts;
+    // Fallback: if model returned a single string
+    if (typeof parsed === 'string') return [parsed];
+    return [raw.trim()];
+  } catch {
+    // Raw text fallback — return the whole response as one post
+    const text = raw.trim();
+    return text ? [text] : [];
+  }
+}
+
+export function parseTwitterThreads(raw: string): string[][] {
+  try {
+    const cleaned = extractJson(raw);
+    const parsed = JSON.parse(cleaned);
+    if (Array.isArray(parsed.threads) && parsed.threads.length > 0) {
+      return parsed.threads.map((t: { tweets?: string[]; thread?: string[] }) =>
+        Array.isArray(t.tweets) ? t.tweets : Array.isArray(t.thread) ? t.thread : []
+      );
+    }
     return [];
   } catch {
-    return [];
+    // Split by newlines as a rough fallback
+    const lines = raw.trim().split('\n').filter(Boolean);
+    return lines.length > 0 ? [lines] : [];
   }
 }
 
 export function parseNewsletter(raw: string): { subject: string; content: string } {
   try {
-    const parsed = JSON.parse(raw);
-    return { subject: parsed.subject || '', content: parsed.content || '' };
+    const cleaned = extractJson(raw);
+    const parsed = JSON.parse(cleaned);
+    return {
+      subject: typeof parsed.subject === 'string' ? parsed.subject : '',
+      content: typeof parsed.content === 'string' ? parsed.content : raw.trim(),
+    };
   } catch {
-    return { subject: '', content: raw };
+    return { subject: '', content: raw.trim() };
   }
 }
 
 export function parseInstagramCaptions(raw: string): string[] {
   try {
-    const parsed = JSON.parse(raw);
-    if (parsed.captions && Array.isArray(parsed.captions)) return parsed.captions;
-    return [];
+    const cleaned = extractJson(raw);
+    const parsed = JSON.parse(cleaned);
+    if (Array.isArray(parsed.captions) && parsed.captions.length > 0) return parsed.captions;
+    return [raw.trim()];
   } catch {
-    return [];
+    const text = raw.trim();
+    return text ? [text] : [];
   }
 }

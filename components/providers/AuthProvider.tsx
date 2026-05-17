@@ -14,8 +14,6 @@ import {
   signInWithPopup,
   GoogleAuthProvider,
   signOut,
-  setPersistence,
-  browserLocalPersistence,
   type User as FirebaseUser,
 } from 'firebase/auth';
 import { getFirebaseApp } from '@/firebase/config';
@@ -38,27 +36,54 @@ const AuthContext = createContext<AuthContextValue>({
   getToken: async () => null,
 });
 
+async function refreshSessionCookie(firebaseUser: FirebaseUser): Promise<void> {
+  try {
+    const token = await firebaseUser.getIdToken();
+    await fetch('/api/auth/session', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        uid: firebaseUser.uid,
+        email: firebaseUser.email,
+        displayName: firebaseUser.displayName,
+        photoURL: firebaseUser.photoURL,
+      }),
+    });
+    console.log('[Auth] session cookie refreshed');
+  } catch (e) {
+    // Non-fatal — client-side auth still works without the cookie.
+    // Proxy protection is secondary; API routes verify tokens directly.
+    console.warn('[Auth] session cookie refresh failed (non-fatal):', e);
+  }
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<FirebaseUser | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // browser-only — set explicit local persistence then subscribe
+    // DO NOT call setPersistence here — Firebase defaults to browserLocalPersistence
+    // on the web, and calling it on an already-authenticated instance temporarily
+    // nulls the auth state, causing the infinite-spinner bug in the dashboard layout.
     const auth = getAuth(getFirebaseApp());
+    console.log('[Auth] subscribing to onAuthStateChanged');
 
-    console.log('[Auth] initialising, setting browserLocalPersistence');
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      console.log('[Auth] state changed →', firebaseUser ? `uid=${firebaseUser.uid}` : 'signed out');
 
-    setPersistence(auth, browserLocalPersistence)
-      .then(() => {
-        console.log('[Auth] persistence set — subscribing to onAuthStateChanged');
-      })
-      .catch((err) => {
-        console.warn('[Auth] setPersistence failed (non-fatal):', err);
-      });
+      if (firebaseUser) {
+        // Refresh session cookie so the server-side proxy stays in sync.
+        // This is fire-and-forget — we don't block showing the UI.
+        refreshSessionCookie(firebaseUser);
+      } else {
+        // Clear cookie on sign-out
+        fetch('/api/auth/session', { method: 'DELETE' }).catch(() => {});
+      }
 
-    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
-      console.log('[Auth] onAuthStateChanged →', firebaseUser ? `uid=${firebaseUser.uid}` : 'null');
       setUser(firebaseUser);
       setLoading(false);
     });
@@ -72,33 +97,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const provider = new GoogleAuthProvider();
     provider.setCustomParameters({ prompt: 'select_account' });
 
-    console.log('[Auth] signInWithPopup — opening Google popup');
+    console.log('[Auth] opening Google sign-in popup');
 
     try {
-      const result = await signInWithPopup(auth, provider);
-      console.log('[Auth] popup resolved — uid:', result.user.uid);
-
-      // Sync user record to Firestore + set session cookie (best-effort)
-      try {
-        const token = await result.user.getIdToken();
-        const res = await fetch('/api/auth/session', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            uid: result.user.uid,
-            email: result.user.email,
-            displayName: result.user.displayName,
-            photoURL: result.user.photoURL,
-          }),
-        });
-        console.log('[Auth] session API status:', res.status);
-      } catch (sessionErr) {
-        // Non-fatal — Firebase client auth still works without session cookie
-        console.warn('[Auth] session API error (non-fatal):', sessionErr);
-      }
+      await signInWithPopup(auth, provider);
+      // onAuthStateChanged above handles everything after this point.
+      // Do NOT manually set user state here — that creates duplicate state.
+      console.log('[Auth] popup completed — waiting for onAuthStateChanged');
     } catch (err: unknown) {
       console.error('[Auth] signInWithPopup error:', err);
       const code = (err as { code?: string })?.code ?? '';
@@ -108,18 +113,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           : code === 'auth/popup-closed-by-user'
           ? 'Sign-in cancelled.'
           : code === 'auth/unauthorized-domain'
-          ? 'This domain is not authorised in Firebase. Add it to Firebase Console → Authentication → Settings → Authorised domains.'
-          : (err instanceof Error ? err.message : 'Sign-in failed. Please try again.');
+          ? 'This domain is not authorised. Add it to Firebase Console → Authentication → Settings → Authorised domains.'
+          : err instanceof Error
+          ? err.message
+          : 'Sign-in failed. Please try again.';
       setError(message);
       throw err;
     }
   }, []);
 
   const logout = useCallback(async () => {
-    console.log('[Auth] logging out');
+    console.log('[Auth] signing out');
     const auth = getAuth(getFirebaseApp());
     await signOut(auth);
-    await fetch('/api/auth/session', { method: 'DELETE' }).catch(() => {});
+    // Cookie deletion is handled by onAuthStateChanged → null path above
   }, []);
 
   const getToken = useCallback(async (): Promise<string | null> => {
