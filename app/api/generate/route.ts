@@ -120,7 +120,16 @@ export async function POST(req: NextRequest) {
     });
   } catch (err: unknown) {
     console.error('[generate] unhandled error:', err);
-    const message = err instanceof Error ? err.message : 'Internal server error';
+    let message = 'Something went wrong. Please try again.';
+    if (err instanceof Error) {
+      message = err.message;
+      // Safety net: never surface raw gRPC codes (e.g. "5 NOT_FOUND") to the UI.
+      // mapGeminiError in lib/claude.ts should already handle these, but
+      // if something slips through, replace it with something readable.
+      if (/^\d+ [A-Z_]+/.test(message)) {
+        message = `AI generation failed (${message}). Check your GOOGLE_AI_API_KEY and GEMINI_MODEL env vars.`;
+      }
+    }
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
