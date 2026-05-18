@@ -17,6 +17,13 @@ async function fetchVideoTitle(videoId: string): Promise<string> {
   }
 }
 
+function isFirebaseError(err: unknown): boolean {
+  if (!(err instanceof Error)) return false;
+  const m = err.message;
+  // Firebase Admin SDK gRPC errors: "5 NOT_FOUND", "7 PERMISSION_DENIED", "16 UNAUTHENTICATED"
+  return /^\d+ [A-Z_]+/.test(m) || m.includes('FIREBASE') || m.includes('credential') || m.includes('serviceAccount');
+}
+
 export async function POST(req: NextRequest) {
   const start = Date.now();
   try {
@@ -25,29 +32,55 @@ export async function POST(req: NextRequest) {
     const token = authHeader.replace('Bearer ', '');
     if (!token) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-    const decoded = await adminAuth.verifyIdToken(token);
-    const uid = decoded.uid;
+    let uid: string;
+    try {
+      const decoded = await adminAuth.verifyIdToken(token);
+      uid = decoded.uid;
+    } catch (err) {
+      console.error('[generate] auth error:', err instanceof Error ? err.message : err);
+      if (isFirebaseError(err)) {
+        return NextResponse.json(
+          { error: 'Firebase Admin SDK is not configured. Ensure FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL, and FIREBASE_PRIVATE_KEY are set in your environment variables.' },
+          { status: 500 }
+        );
+      }
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
     console.log(`[generate] uid=${uid}`);
 
     // ── User + limits ─────────────────────────────────────────────────────────
-    let user = await getUser(uid);
-    if (!user) {
-      // Create user on first use if the session API hasn't run yet
-      await createOrUpdateUser({
-        uid,
-        email: decoded.email || '',
-        displayName: decoded.name || '',
-        photoURL: decoded.picture || null,
-      });
+    let user;
+    try {
       user = await getUser(uid);
+      if (!user) {
+        const decoded = await adminAuth.verifyIdToken(token);
+        await createOrUpdateUser({
+          uid,
+          email: decoded.email || '',
+          displayName: decoded.name || '',
+          photoURL: decoded.picture || null,
+        });
+        user = await getUser(uid);
+      }
+    } catch (err) {
+      console.error('[generate] firestore user error:', err instanceof Error ? err.message : err);
+      return NextResponse.json(
+        { error: 'Could not load your account. Ensure FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL, and FIREBASE_PRIVATE_KEY are set as environment variables.' },
+        { status: 500 }
+      );
     }
 
-    const exceeded = await hasExceededLimit(uid, user!.plan);
-    if (exceeded) {
-      return NextResponse.json(
-        { error: 'Monthly generation limit reached. Please upgrade your plan.' },
-        { status: 403 }
-      );
+    try {
+      const exceeded = await hasExceededLimit(uid, user!.plan);
+      if (exceeded) {
+        return NextResponse.json(
+          { error: 'Monthly generation limit reached. Please upgrade your plan.' },
+          { status: 403 }
+        );
+      }
+    } catch (err) {
+      console.error('[generate] limit check error:', err instanceof Error ? err.message : err);
+      // Non-fatal — continue if limit check fails
     }
 
     // ── Parse request ─────────────────────────────────────────────────────────
@@ -123,11 +156,11 @@ export async function POST(req: NextRequest) {
     let message = 'Something went wrong. Please try again.';
     if (err instanceof Error) {
       message = err.message;
-      // Safety net: never surface raw gRPC codes (e.g. "5 NOT_FOUND") to the UI.
-      // mapGeminiError in lib/claude.ts should already handle these, but
-      // if something slips through, replace it with something readable.
+      // Firebase Admin gRPC codes that slipped through (e.g. "5 NOT_FOUND: ")
       if (/^\d+ [A-Z_]+/.test(message)) {
-        message = `AI generation failed (${message}). Check your GOOGLE_AI_API_KEY and GEMINI_MODEL env vars.`;
+        message =
+          'Firebase Admin is not configured correctly. ' +
+          'Set FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL, and FIREBASE_PRIVATE_KEY in your environment variables.';
       }
     }
     return NextResponse.json({ error: message }, { status: 500 });
