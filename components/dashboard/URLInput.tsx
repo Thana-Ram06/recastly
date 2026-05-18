@@ -37,7 +37,7 @@ export function URLInput({ onGenerate, isGenerating, hasReachedLimit }: URLInput
     ? 'border-red-500/35 bg-red-500/[0.05] focus-within:border-red-500/50'
     : hasReachedLimit
     ? 'border-amber-500/35 bg-amber-500/[0.05]'
-    : 'border-white/[0.09] bg-[#17171f] focus-within:border-brand-500/45 focus-within:bg-[#1a1a28]';
+    : 'border-white/[0.09] bg-[#17171f] focus-within:border-zinc-600/70 focus-within:bg-[#1a1a28]';
 
   return (
     <div className="w-full">
@@ -107,13 +107,13 @@ export function URLInput({ onGenerate, isGenerating, hasReachedLimit }: URLInput
           >
             <div
               className="rounded-xl px-4 py-3.5 flex items-center gap-3"
-              style={{ background: 'rgba(124,92,252,0.07)', border: '1px solid rgba(124,92,252,0.2)' }}
+              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.09)' }}
             >
               <div className="flex gap-1 shrink-0">
                 {[0, 1, 2].map((i) => (
                   <motion.div
                     key={i}
-                    className="h-1.5 w-1.5 rounded-full bg-brand-400"
+                    className="h-1.5 w-1.5 rounded-full bg-zinc-500"
                     animate={{ scale: [1, 1.5, 1], opacity: [0.4, 1, 0.4] }}
                     transition={{ duration: 1.1, repeat: Infinity, delay: i * 0.2 }}
                   />

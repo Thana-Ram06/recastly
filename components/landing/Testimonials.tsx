@@ -17,7 +17,7 @@ const testimonials = [
     name: 'Marcus Webb',
     role: 'SaaS Founder, 82K followers on X',
     avatar: 'MW',
-    avatarColor: 'from-brand-500 to-brand-600',
+    avatarColor: 'from-zinc-700 to-zinc-800',
     content:
       "I was spending 4+ hours repurposing content manually. Now I paste a URL and it's done. The Twitter threads it generates actually sound like me — not some robot.",
     stars: 5,
@@ -82,8 +82,8 @@ export function Testimonials() {
           className="text-center mb-16"
         >
           <div className="flex items-center justify-center gap-2 mb-4">
-            <div className="h-1.5 w-1.5 rounded-full bg-brand-400 animate-pulse-slow" />
-            <p className="text-xs font-semibold text-brand-400 uppercase tracking-[0.12em]">Testimonials</p>
+            <div className="h-1.5 w-1.5 rounded-full bg-zinc-500 animate-pulse-slow" />
+            <p className="text-xs font-semibold text-zinc-500 uppercase tracking-[0.12em]">Testimonials</p>
           </div>
           <h2 className="font-serif text-4xl sm:text-[52px] text-zinc-100 tracking-[-0.02em] leading-[1.06]">
             Loved by creators

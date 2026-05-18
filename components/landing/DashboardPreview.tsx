@@ -76,7 +76,7 @@ export function DashboardPreview() {
 
             {/* URL input row */}
             <div className="px-5 py-4 border-b border-white/[0.05]">
-              <div className="flex items-center gap-3 px-4 py-2.5 rounded-xl border border-brand-500/25 bg-brand-500/[0.06]">
+              <div className="flex items-center gap-3 px-4 py-2.5 rounded-xl border border-zinc-700/40 bg-zinc-800/30">
                 <YoutubeIcon className="h-3.5 w-3.5 text-red-400 shrink-0" />
                 <span className="text-xs text-zinc-500 font-mono flex-1 tracking-[-0.01em]">
                   youtube.com/watch?v=dQw4w9WgXcQ

@@ -35,7 +35,7 @@ export function TopNav({ title }: { title?: string }) {
     >
       {/* Mobile logo */}
       <Link href="/dashboard" className="lg:hidden flex items-center gap-2.5">
-        <div className="h-6 w-6 rounded-lg bg-gradient-to-b from-brand-500 to-brand-600 flex items-center justify-center">
+        <div className="h-6 w-6 rounded-lg bg-zinc-900 border border-zinc-700/80 flex items-center justify-center">
           <svg width="11" height="11" viewBox="0 0 16 16" fill="none">
             <path d="M3 13L8 3L13 13" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             <path d="M5 10H11" stroke="white" strokeWidth="2" strokeLinecap="round"/>
@@ -93,7 +93,7 @@ export function TopNav({ title }: { title?: string }) {
                 {user?.photoURL ? (
                   <img src={user.photoURL} alt="" className="h-6 w-6 rounded-full ring-1 ring-white/10" />
                 ) : (
-                  <div className="h-6 w-6 rounded-full bg-gradient-to-b from-brand-500 to-brand-600 flex items-center justify-center text-white text-[10px] font-bold">
+                  <div className="h-6 w-6 rounded-full bg-zinc-800 border border-zinc-700/60 flex items-center justify-center text-zinc-300 text-[10px] font-bold">
                     {user?.displayName?.charAt(0) || '?'}
                   </div>
                 )}

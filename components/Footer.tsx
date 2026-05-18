@@ -6,7 +6,7 @@ export function Footer() {
       <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-5">
         {/* Logo */}
         <div className="flex items-center gap-2.5">
-          <div className="h-6 w-6 rounded-lg bg-gradient-to-b from-brand-500 to-brand-600 flex items-center justify-center shrink-0">
+          <div className="h-6 w-6 rounded-lg bg-zinc-900 border border-zinc-700/80 flex items-center justify-center shrink-0">
             <svg width="11" height="11" viewBox="0 0 16 16" fill="none">
               <path d="M3 13L8 3L13 13" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               <path d="M5 10H11" stroke="white" strokeWidth="2" strokeLinecap="round"/>

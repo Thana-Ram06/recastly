@@ -36,7 +36,7 @@ export function Sidebar() {
     >
       {/* Logo */}
       <div className="h-16 flex items-center gap-2.5 px-4" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-        <div className="h-7 w-7 rounded-lg bg-gradient-to-b from-brand-500 to-brand-600 flex items-center justify-center shrink-0 shadow-glow-sm">
+        <div className="h-7 w-7 rounded-lg bg-zinc-900 border border-zinc-700/80 flex items-center justify-center shrink-0">
           <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
             <path d="M3 13L8 3L13 13" stroke="white" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"/>
             <path d="M5 10H11" stroke="white" strokeWidth="1.75" strokeLinecap="round"/>
@@ -56,14 +56,14 @@ export function Sidebar() {
               className={cn(
                 'relative flex items-center gap-2.5 h-9 px-3 rounded-xl text-xs font-medium transition-all duration-200',
                 active
-                  ? 'bg-[#17171f] text-zinc-100'
+                  ? 'bg-zinc-800/60 text-zinc-100'
                   : 'text-zinc-600 hover:text-zinc-300 hover:bg-white/[0.05]'
               )}
             >
               {active && (
-                <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-4 rounded-r-full bg-brand-500" />
+                <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-4 rounded-r-full bg-sky-400/70" />
               )}
-              <Icon className={cn('h-3.5 w-3.5 shrink-0', active ? 'text-brand-400' : '')} />
+              <Icon className={cn('h-3.5 w-3.5 shrink-0', active ? 'text-zinc-300' : '')} />
               {label}
             </Link>
           );
@@ -78,12 +78,12 @@ export function Sidebar() {
         >
           <div className="flex items-center justify-between mb-2.5">
             <div className="flex items-center gap-1.5">
-              <Zap className="h-3 w-3 text-brand-400 shrink-0" />
+              <Zap className="h-3 w-3 text-zinc-500 shrink-0" />
               <span className="text-[10px] text-zinc-600 font-medium">Generations</span>
             </div>
             <span className={cn(
               'inline-flex items-center gap-1 text-[10px] font-semibold px-1.5 py-0.5 rounded-lg',
-              plan === 'pro'     ? 'bg-brand-500/15 text-brand-400 border border-brand-500/20' :
+              plan === 'pro'     ? 'bg-sky-400/15 text-sky-400 border border-sky-400/20' :
               plan === 'starter' ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/20' :
                                    'bg-white/[0.05] text-zinc-600 border border-white/[0.07]'
             )}>
@@ -99,7 +99,7 @@ export function Sidebar() {
               <div
                 className={cn(
                   'h-full rounded-full transition-all duration-500',
-                  usagePct > 80 ? 'bg-amber-500' : 'bg-gradient-to-r from-brand-500 to-brand-400'
+                  usagePct > 80 ? 'bg-amber-500' : 'bg-zinc-400'
                 )}
                 style={{ width: `${usagePct}%` }}
               />
@@ -108,7 +108,7 @@ export function Sidebar() {
           {plan === 'free' && (
             <Link
               href="/settings"
-              className="mt-3 text-[11px] font-medium text-brand-400 hover:text-brand-300 flex items-center gap-1 transition-colors"
+              className="mt-3 text-[11px] font-medium text-sky-400 hover:text-sky-300 flex items-center gap-1 transition-colors"
             >
               Upgrade plan →
             </Link>
@@ -125,7 +125,7 @@ export function Sidebar() {
           {user?.photoURL ? (
             <img src={user.photoURL} alt="" className="h-6 w-6 rounded-full object-cover shrink-0 ring-1 ring-white/10" />
           ) : (
-            <div className="h-6 w-6 rounded-full bg-gradient-to-b from-brand-500 to-brand-600 flex items-center justify-center text-white text-[10px] font-bold shrink-0">
+            <div className="h-6 w-6 rounded-full bg-zinc-800 border border-zinc-700/60 flex items-center justify-center text-zinc-300 text-[10px] font-bold shrink-0">
               {user?.displayName?.charAt(0) || '?'}
             </div>
           )}

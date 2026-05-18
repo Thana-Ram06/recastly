@@ -36,8 +36,8 @@ export function HowItWorks() {
           className="mb-16"
         >
           <div className="flex items-center gap-2 mb-4">
-            <div className="h-1.5 w-1.5 rounded-full bg-brand-400 animate-pulse-slow" />
-            <p className="text-xs font-semibold text-brand-400 uppercase tracking-[0.12em]">How it works</p>
+            <div className="h-1.5 w-1.5 rounded-full bg-zinc-500 animate-pulse-slow" />
+            <p className="text-xs font-semibold text-zinc-500 uppercase tracking-[0.12em]">How it works</p>
           </div>
           <h2 className="font-serif text-4xl sm:text-[52px] text-zinc-100 leading-[1.06] tracking-[-0.02em]">
             Three steps. Thirty seconds.
@@ -58,8 +58,8 @@ export function HowItWorks() {
               <div className="font-mono text-[10px] text-zinc-700 mb-6 tracking-[0.15em] font-medium">{n}</div>
 
               {/* Icon */}
-              <div className="h-10 w-10 rounded-xl icon-bg-brand border border-brand-500/20 flex items-center justify-center mb-5">
-                <Icon className="h-[18px] w-[18px] text-brand-400" />
+              <div className="h-10 w-10 rounded-xl bg-zinc-900 border border-zinc-700/50 flex items-center justify-center mb-5">
+                <Icon className="h-[18px] w-[18px] text-zinc-400" />
               </div>
 
               <h3 className="text-sm font-semibold text-zinc-100 mb-2.5 tracking-[-0.01em]">{title}</h3>

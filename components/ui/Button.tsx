@@ -12,19 +12,19 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant = 'primary', size = 'md', loading, children, disabled, ...props }, ref) => {
     const base =
-      'inline-flex items-center justify-center font-medium rounded-xl transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-zinc-950 disabled:pointer-events-none disabled:opacity-40 select-none shrink-0';
+      'inline-flex items-center justify-center font-medium rounded-xl transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400/60 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-zinc-950 disabled:pointer-events-none disabled:opacity-40 select-none shrink-0';
 
     const variants = {
       primary:
-        'bg-gradient-to-b from-brand-500 to-brand-600 text-white shadow-button-primary hover:shadow-button-primary-hover hover:from-brand-400 hover:to-brand-500 active:from-brand-600 active:to-brand-700',
+        'bg-zinc-100 text-zinc-900 shadow-button-primary hover:bg-white hover:shadow-button-primary-hover active:bg-zinc-200 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-white',
       secondary:
-        'bg-[#17171f] text-zinc-200 border border-white/[0.08] hover:bg-[#1e1e2c] hover:border-white/[0.12] active:bg-[#111118] dark:bg-[#17171f] dark:text-zinc-200',
+        'bg-[#17171f] text-zinc-200 border border-white/[0.08] hover:bg-[#1e1e2c] hover:border-white/[0.12] active:bg-[#111118]',
       ghost:
         'text-zinc-500 hover:text-zinc-200 hover:bg-white/[0.06] dark:text-zinc-400 dark:hover:text-zinc-100 dark:hover:bg-white/[0.07] active:bg-white/[0.03]',
       danger:
         'bg-red-500/90 text-white hover:bg-red-500 active:bg-red-600 shadow-[0_1px_0_rgba(255,255,255,0.1)_inset]',
       outline:
-        'border border-white/[0.1] dark:border-white/[0.09] text-zinc-700 dark:text-zinc-300 hover:bg-white/[0.04] dark:hover:bg-white/[0.06] hover:border-white/[0.16] dark:hover:border-white/[0.14]',
+        'border border-zinc-300 dark:border-white/[0.12] text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-white/[0.06] hover:border-zinc-400 dark:hover:border-white/[0.18] active:bg-zinc-100 dark:active:bg-white/[0.04]',
     };
 
     const sizes = {

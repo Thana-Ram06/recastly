@@ -37,7 +37,7 @@ export default function LoginPage() {
 
   const spinner = (
     <div className="min-h-screen flex items-center justify-center" style={{ background: '#0c0c12' }}>
-      <div className="h-5 w-5 rounded-full border-2 border-brand-500 border-t-transparent animate-spin" />
+      <div className="h-5 w-5 rounded-full border-2 border-zinc-600 border-t-zinc-200 animate-spin" />
     </div>
   );
 
@@ -45,8 +45,6 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 relative overflow-hidden" style={{ background: '#0c0c12' }}>
-      {/* Glow */}
-      <div aria-hidden className="pointer-events-none absolute top-0 left-0 right-0 h-[50vh] bg-hero-glow opacity-70" />
       <div aria-hidden className="pointer-events-none absolute inset-0 bg-dot-grid" />
 
       <motion.div
@@ -60,8 +58,9 @@ export default function LoginPage() {
           <div
             className="h-12 w-12 rounded-2xl flex items-center justify-center"
             style={{
-              background: 'linear-gradient(to bottom, #7c5cfc, #6b4ae8)',
-              boxShadow: '0 0 0 1px rgba(124,92,252,0.4), 0 8px 32px rgba(124,92,252,0.25)',
+              background: '#18181f',
+              border: '1px solid rgba(255,255,255,0.12)',
+              boxShadow: '0 4px 24px rgba(0,0,0,0.5)',
             }}
           >
             <svg width="20" height="20" viewBox="0 0 16 16" fill="none">

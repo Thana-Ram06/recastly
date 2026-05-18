@@ -17,16 +17,10 @@ export function CTASection() {
           className="relative rounded-3xl overflow-hidden"
           style={{
             background: 'linear-gradient(135deg, #111118 0%, #0f0f1a 50%, #0c0c12 100%)',
-            border: '1px solid rgba(124,92,252,0.2)',
-            boxShadow: '0 0 0 1px rgba(124,92,252,0.12), 0 40px 80px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05)',
+            border: '1px solid rgba(255,255,255,0.1)',
+            boxShadow: '0 40px 80px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05)',
           }}
         >
-          {/* Glow overlay */}
-          <div
-            aria-hidden
-            className="pointer-events-none absolute top-0 left-0 right-0 h-56"
-            style={{ background: 'radial-gradient(ellipse 70% 50% at 50% -10%, rgba(124,92,252,0.2), transparent 70%)' }}
-          />
           {/* Dot grid */}
           <div
             aria-hidden
@@ -41,8 +35,8 @@ export function CTASection() {
               transition={{ delay: 0.15 }}
               className="flex justify-center mb-8"
             >
-              <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-[11px] font-medium bg-brand-500/12 text-brand-300 border border-brand-500/20 tracking-wide">
-                <span className="h-1.5 w-1.5 rounded-full bg-brand-400 animate-pulse-slow" />
+              <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-[11px] font-medium bg-zinc-800/70 text-zinc-400 border border-zinc-700/60 tracking-wide">
+                <span className="h-1.5 w-1.5 rounded-full bg-zinc-500 animate-pulse-slow" />
                 Start generating today
               </span>
             </motion.div>

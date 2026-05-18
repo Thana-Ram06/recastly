@@ -8,43 +8,38 @@ import { LinkedinIcon, XIcon, InstagramIcon } from '@/components/ui/BrandIcons';
 import { Mail } from 'lucide-react';
 
 const platforms = [
-  { icon: LinkedinIcon, label: 'LinkedIn',   color: 'text-blue-400',   bg: 'bg-blue-500/10',   border: 'border-blue-500/15' },
-  { icon: XIcon,        label: 'X',          color: 'text-zinc-300',   bg: 'bg-zinc-500/10',   border: 'border-zinc-500/15' },
-  { icon: Mail,         label: 'Newsletter', color: 'text-violet-400', bg: 'bg-violet-500/10', border: 'border-violet-500/15' },
-  { icon: InstagramIcon,label: 'Instagram',  color: 'text-pink-400',   bg: 'bg-pink-500/10',   border: 'border-pink-500/15' },
+  { icon: LinkedinIcon, label: 'LinkedIn' },
+  { icon: XIcon,        label: 'X' },
+  { icon: Mail,         label: 'Newsletter' },
+  { icon: InstagramIcon,label: 'Instagram' },
 ];
 
 export function Hero() {
   return (
     <section className="relative min-h-screen flex items-center justify-center pt-24 pb-20 overflow-hidden">
-      {/* Background glow blob */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute top-0 left-0 right-0 h-[70vh] bg-hero-glow"
-      />
       {/* Dot grid */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 bg-dot-grid opacity-100"
+        className="pointer-events-none absolute inset-0 bg-dot-grid"
       />
-      {/* Subtle radial vignette */}
+      {/* Radial vignette keeps edges dark */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0"
-        style={{ background: 'radial-gradient(ellipse 70% 60% at 50% 100%, transparent 60%, rgba(12,12,18,0.8) 100%)' }}
+        style={{ background: 'radial-gradient(ellipse 70% 60% at 50% 100%, transparent 60%, rgba(12,12,18,0.9) 100%)' }}
       />
 
       <div className="relative z-10 max-w-4xl mx-auto px-5 sm:px-6 text-center">
 
-        {/* Launch badge */}
+        {/* Badge */}
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.45 }}
           className="flex justify-center mb-10"
         >
-          <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-[11px] font-medium bg-brand-500/10 text-brand-300 border border-brand-500/20 tracking-wide">
-            <Sparkles className="h-3 w-3 text-brand-400" />
+          <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-[11px] font-medium bg-zinc-800/70 text-zinc-400 border border-zinc-700/60 tracking-wide">
+            <Sparkles className="h-3 w-3 text-zinc-500" />
             AI-powered content repurposing
           </span>
         </motion.div>
@@ -58,7 +53,7 @@ export function Hero() {
         >
           Turn any YouTube video
           <br />
-          <span className="text-gradient">into content that converts.</span>
+          <span className="text-zinc-400">into content that converts.</span>
         </motion.h1>
 
         {/* Subtitle */}
@@ -98,16 +93,16 @@ export function Hero() {
           transition={{ duration: 0.7, delay: 0.36 }}
           className="flex items-center justify-center gap-2 flex-wrap"
         >
-          {platforms.map(({ icon: Icon, label, color, bg, border }) => (
+          {platforms.map(({ icon: Icon, label }) => (
             <span
               key={label}
-              className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl ${bg} border ${border} text-xs text-zinc-400 font-medium`}
+              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-zinc-900/80 border border-zinc-700/50 text-xs text-zinc-500 font-medium"
             >
-              <Icon className={`h-3.5 w-3.5 ${color}`} />
+              <Icon className="h-3.5 w-3.5 text-zinc-500" style={{ width: '14px', height: '14px' }} />
               {label}
             </span>
           ))}
-          <span className="text-xs text-zinc-600 ml-1 font-medium">→ all at once</span>
+          <span className="text-xs text-zinc-700 ml-1 font-medium">→ all at once</span>
         </motion.div>
 
         {/* Trust line */}
@@ -117,7 +112,7 @@ export function Hero() {
           transition={{ duration: 0.6, delay: 0.5 }}
           className="mt-10 text-xs text-zinc-700 tracking-wide"
         >
-          No credit card required &nbsp;&middot;&nbsp; Free plan available &nbsp;&middot;&nbsp; Powered by Claude AI
+          No credit card required &nbsp;&middot;&nbsp; Free plan available &nbsp;&middot;&nbsp; Powered by Gemini AI
         </motion.p>
       </div>
     </section>

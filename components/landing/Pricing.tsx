@@ -49,8 +49,8 @@ export function Pricing() {
           className="mb-16"
         >
           <div className="flex items-center gap-2 mb-4">
-            <div className="h-1.5 w-1.5 rounded-full bg-brand-400 animate-pulse-slow" />
-            <p className="text-xs font-semibold text-brand-400 uppercase tracking-[0.12em]">Pricing</p>
+            <div className="h-1.5 w-1.5 rounded-full bg-zinc-500 animate-pulse-slow" />
+            <p className="text-xs font-semibold text-zinc-500 uppercase tracking-[0.12em]">Pricing</p>
           </div>
           <h2 className="font-serif text-4xl sm:text-[52px] text-zinc-100 leading-[1.06] tracking-[-0.02em] mb-4">
             Simple, honest pricing
@@ -69,13 +69,13 @@ export function Pricing() {
               className={cn(
                 'relative rounded-2xl p-6 flex flex-col transition-all duration-300',
                 featured
-                  ? 'gradient-border bg-[#111118] shadow-glow-md'
-                  : 'border border-white/[0.07] bg-[#111118] hover:border-white/[0.11] hover:bg-[#141420]'
+                  ? 'featured-border bg-[#111118]'
+                  : 'border border-zinc-800/80 bg-[#111118] hover:border-zinc-700/80 hover:bg-[#141420]'
               )}
             >
               {badge && (
                 <div className="absolute -top-3.5 left-5">
-                  <span className="px-3 py-1 rounded-full text-[11px] font-semibold bg-gradient-to-b from-brand-500 to-brand-600 text-white shadow-button-primary">
+                  <span className="px-3 py-1 rounded-full text-[11px] font-semibold bg-zinc-800 border border-zinc-700 text-zinc-200">
                     {badge}
                   </span>
                 </div>
@@ -96,13 +96,8 @@ export function Pricing() {
               <ul className="space-y-3 mb-8 flex-1">
                 {features.map((f) => (
                   <li key={f} className="flex items-center gap-2.5">
-                    <div className={cn(
-                      'h-4 w-4 rounded-full flex items-center justify-center shrink-0',
-                      featured
-                        ? 'bg-brand-500/15 border border-brand-500/25'
-                        : 'bg-white/[0.05] border border-white/[0.08]'
-                    )}>
-                      <Check className={cn('h-2.5 w-2.5 shrink-0', featured ? 'text-brand-400' : 'text-zinc-500')} />
+                    <div className="h-4 w-4 rounded-full bg-zinc-800 border border-zinc-700/80 flex items-center justify-center shrink-0">
+                      <Check className={cn('h-2.5 w-2.5 shrink-0', featured ? 'text-zinc-300' : 'text-zinc-500')} />
                     </div>
                     <span className="text-sm text-zinc-400">{f}</span>
                   </li>
@@ -128,7 +123,7 @@ export function Pricing() {
           transition={{ delay: 0.3 }}
           className="text-center text-xs text-zinc-700 mt-8 tracking-wide"
         >
-          All plans include Claude AI &nbsp;·&nbsp; Secure payment via Stripe &nbsp;·&nbsp; No lock-in
+          All plans include Gemini AI &nbsp;·&nbsp; Secure payment via Stripe &nbsp;·&nbsp; No lock-in
         </motion.p>
       </div>
     </section>

@@ -89,7 +89,7 @@ export default function SettingsPage() {
               {user?.photoURL ? (
                 <img src={user.photoURL} alt="" className="h-12 w-12 rounded-full object-cover" />
               ) : (
-                <div className="h-12 w-12 rounded-full bg-brand-600 flex items-center justify-center text-white text-lg font-bold">
+                <div className="h-12 w-12 rounded-full bg-zinc-800 border border-zinc-700/60 flex items-center justify-center text-zinc-300 text-lg font-bold">
                   {user?.displayName?.charAt(0) || '?'}
                 </div>
               )}
@@ -110,7 +110,7 @@ export default function SettingsPage() {
             <span className={cn(
               'ml-auto text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full',
               plan === 'pro'
-                ? 'bg-brand-600/20 text-brand-400 border border-brand-500/30'
+                ? 'bg-sky-400/15 text-sky-400 border border-sky-400/25'
                 : plan === 'starter'
                 ? 'bg-emerald-600/20 text-emerald-400 border border-emerald-500/30'
                 : 'bg-zinc-800 text-zinc-500 border border-white/5'
@@ -139,9 +139,11 @@ export default function SettingsPage() {
                     onClick={() => handleUpgrade('pro')}
                     disabled={isUpgrading}
                     className="rounded-xl p-4 text-left transition-all duration-200"
-                    style={{ background: 'rgba(124,92,252,0.08)', border: '1px solid rgba(124,92,252,0.3)' }}
+                    style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.12)' }}
+                    onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.07)'; }}
+                    onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.04)'; }}
                   >
-                    <p className="text-xs font-semibold text-brand-400">Pro</p>
+                    <p className="text-xs font-semibold text-zinc-300">Pro</p>
                     <p className="text-xl font-bold text-zinc-100 my-1.5">$29<span className="text-xs font-normal text-zinc-600">/mo</span></p>
                     <p className="text-[11px] text-zinc-600">Unlimited generations</p>
                   </button>

@@ -27,7 +27,7 @@ export function UsageStats() {
         </div>
         <p className="text-base font-bold text-zinc-100 capitalize tracking-[-0.02em]">{plan}</p>
         {plan !== 'pro' && (
-          <Link href="/settings" className="mt-1 text-[11px] text-brand-400 hover:text-brand-300 transition-colors font-medium">
+          <Link href="/settings" className="mt-1 text-[11px] text-sky-400 hover:text-sky-300 transition-colors font-medium">
             Upgrade →
           </Link>
         )}
@@ -36,7 +36,7 @@ export function UsageStats() {
       {/* Usage */}
       <div className="rounded-xl p-4" style={cardStyle}>
         <div className="flex items-center gap-1.5 mb-3">
-          <Zap className="h-3.5 w-3.5 text-brand-400 shrink-0" />
+          <Zap className="h-3.5 w-3.5 text-zinc-500 shrink-0" />
           <span className="text-[10px] font-semibold text-zinc-600 uppercase tracking-[0.1em]">This month</span>
         </div>
         {loading ? (
@@ -57,7 +57,7 @@ export function UsageStats() {
             <div
               className={cn(
                 'h-full rounded-full transition-all duration-500',
-                isNearLimit ? 'bg-amber-400' : 'bg-gradient-to-r from-brand-500 to-brand-400'
+                isNearLimit ? 'bg-amber-400' : 'bg-zinc-400'
               )}
               style={{ width: `${pct}%` }}
             />

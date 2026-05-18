@@ -30,7 +30,7 @@ export default async function AdminPage() {
 
   const cards = [
     { label: 'Total Users', value: stats.totalUsers, icon: Users, color: 'text-blue-400' },
-    { label: 'Generations', value: stats.totalGenerations, icon: Zap, color: 'text-brand-400' },
+    { label: 'Generations', value: stats.totalGenerations, icon: Zap, color: 'text-zinc-400' },
     { label: 'Active Subs', value: stats.activeSubscriptions, icon: CreditCard, color: 'text-emerald-400' },
     {
       label: 'Conversion',
@@ -44,7 +44,7 @@ export default async function AdminPage() {
     <div className="min-h-screen bg-zinc-950 p-6">
       <div className="max-w-5xl mx-auto">
         <div className="flex items-center gap-3 mb-8">
-          <div className="h-8 w-8 rounded-lg bg-brand-600 flex items-center justify-center">
+          <div className="h-8 w-8 rounded-lg bg-zinc-800 border border-zinc-700 flex items-center justify-center">
             <Activity className="h-4 w-4 text-white" />
           </div>
           <h1 className="text-lg font-semibold text-zinc-100">Admin</h1>

@@ -17,7 +17,7 @@ const navLinks = [
 function Logo() {
   return (
     <Link href="/" className="flex items-center gap-2.5 group">
-      <div className="relative h-7 w-7 rounded-lg overflow-hidden bg-gradient-to-b from-brand-500 to-brand-600 flex items-center justify-center shadow-glow-sm">
+      <div className="relative h-7 w-7 rounded-lg overflow-hidden bg-zinc-900 border border-zinc-700/80 flex items-center justify-center">
         <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
           <path d="M3 13L8 3L13 13" stroke="white" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"/>
           <path d="M5 10H11" stroke="white" strokeWidth="1.75" strokeLinecap="round"/>

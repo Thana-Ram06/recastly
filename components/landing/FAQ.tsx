@@ -53,10 +53,10 @@ function FAQItem({ q, a }: { q: string; a: string }) {
         </span>
         <div className={`shrink-0 h-5 w-5 rounded-full border flex items-center justify-center mt-0.5 transition-all duration-200 ${
           open
-            ? 'border-brand-500/40 bg-brand-500/15 rotate-45'
+            ? 'border-zinc-600 bg-zinc-700/40 rotate-45'
             : 'border-white/[0.1] bg-white/[0.04]'
         }`}>
-          <Plus className={`h-2.5 w-2.5 transition-colors ${open ? 'text-brand-400' : 'text-zinc-500'}`} />
+          <Plus className={`h-2.5 w-2.5 transition-colors ${open ? 'text-zinc-300' : 'text-zinc-500'}`} />
         </div>
       </button>
       <AnimatePresence initial={false}>
@@ -88,8 +88,8 @@ export function FAQ() {
           className="text-center mb-14"
         >
           <div className="flex items-center justify-center gap-2 mb-4">
-            <div className="h-1.5 w-1.5 rounded-full bg-brand-400 animate-pulse-slow" />
-            <p className="text-xs font-semibold text-brand-400 uppercase tracking-[0.12em]">FAQ</p>
+            <div className="h-1.5 w-1.5 rounded-full bg-zinc-500 animate-pulse-slow" />
+            <p className="text-xs font-semibold text-zinc-500 uppercase tracking-[0.12em]">FAQ</p>
           </div>
           <h2 className="font-serif text-4xl sm:text-[52px] text-zinc-100 tracking-[-0.02em] leading-[1.06]">
             Questions answered
