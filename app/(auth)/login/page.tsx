@@ -21,11 +21,8 @@ export default function LoginPage() {
   const { user, loading, signInWithGoogle, error } = useAuth();
   const router = useRouter();
 
-  // Redirect once Firebase confirms the user is authenticated.
-  // This is the ONLY place we redirect — never call router.push inside handleLogin.
   useEffect(() => {
     if (!loading && user) {
-      console.log('[Login] user confirmed — redirecting to /dashboard');
       router.replace('/dashboard');
     }
   }, [user, loading, router]);
@@ -33,63 +30,68 @@ export default function LoginPage() {
   const handleLogin = async () => {
     try {
       await signInWithGoogle();
-      // Do NOT push here. onAuthStateChanged will fire → useEffect above redirects.
     } catch {
-      // error is already stored in context and displayed below
+      // error stored in context
     }
   };
 
-  // Still checking auth state — avoid flash of login UI for returning users
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
-        <div className="h-5 w-5 rounded-full border-2 border-brand-500 border-t-transparent animate-spin" />
-      </div>
-    );
-  }
+  const spinner = (
+    <div className="min-h-screen flex items-center justify-center" style={{ background: '#0c0c12' }}>
+      <div className="h-5 w-5 rounded-full border-2 border-brand-500 border-t-transparent animate-spin" />
+    </div>
+  );
 
-  // Already logged in — render nothing while useEffect redirect fires
-  if (user) {
-    return (
-      <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
-        <div className="h-5 w-5 rounded-full border-2 border-brand-500 border-t-transparent animate-spin" />
-      </div>
-    );
-  }
+  if (loading || user) return spinner;
 
   return (
-    <div className="min-h-screen bg-zinc-950 flex items-center justify-center px-4 relative overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center px-4 relative overflow-hidden" style={{ background: '#0c0c12' }}>
       {/* Glow */}
-      <div aria-hidden className="pointer-events-none absolute top-0 left-0 right-0 h-[50vh] bg-hero-glow opacity-60" />
+      <div aria-hidden className="pointer-events-none absolute top-0 left-0 right-0 h-[50vh] bg-hero-glow opacity-70" />
       <div aria-hidden className="pointer-events-none absolute inset-0 bg-dot-grid" />
 
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
+        transition={{ duration: 0.45 }}
         className="relative z-10 w-full max-w-sm"
       >
-        {/* Logo */}
+        {/* Logo mark */}
         <div className="flex justify-center mb-8">
-          <div className="h-10 w-10 rounded-xl bg-brand-600 flex items-center justify-center shadow-glow">
-            <svg width="18" height="18" viewBox="0 0 16 16" fill="none">
-              <path d="M3 13L8 3L13 13" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M5 10H11" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+          <div
+            className="h-12 w-12 rounded-2xl flex items-center justify-center"
+            style={{
+              background: 'linear-gradient(to bottom, #7c5cfc, #6b4ae8)',
+              boxShadow: '0 0 0 1px rgba(124,92,252,0.4), 0 8px 32px rgba(124,92,252,0.25)',
+            }}
+          >
+            <svg width="20" height="20" viewBox="0 0 16 16" fill="none">
+              <path d="M3 13L8 3L13 13" stroke="white" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M5 10H11" stroke="white" strokeWidth="1.75" strokeLinecap="round"/>
             </svg>
           </div>
         </div>
 
         {/* Card */}
-        <div className="rounded-xl border border-white/8 bg-zinc-900/80 backdrop-blur-sm p-7 text-center">
-          <h1 className="font-serif text-2xl text-zinc-100 mb-2 tracking-tight">
+        <div
+          className="rounded-2xl p-8 text-center"
+          style={{
+            background: '#111118',
+            border: '1px solid rgba(255,255,255,0.09)',
+            boxShadow: '0 0 0 1px rgba(255,255,255,0.04), 0 32px 64px rgba(0,0,0,0.5)',
+          }}
+        >
+          <h1 className="font-serif text-2xl text-zinc-100 mb-2 tracking-[-0.02em]">
             Welcome to Recastly
           </h1>
-          <p className="text-sm text-zinc-500 mb-7 leading-relaxed">
+          <p className="text-sm text-zinc-500 mb-8 leading-relaxed">
             Turn YouTube videos into platform-ready content in seconds.
           </p>
 
           {error && (
-            <div className="mb-5 px-3 py-2.5 rounded-lg bg-red-500/10 border border-red-500/20 text-xs text-red-400 text-left leading-relaxed">
+            <div
+              className="mb-6 px-3.5 py-3 rounded-xl text-xs text-red-400 text-left leading-relaxed"
+              style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.18)' }}
+            >
               {error}
             </div>
           )}
@@ -112,8 +114,8 @@ export default function LoginPage() {
           </p>
         </div>
 
-        <p className="text-center text-xs text-zinc-700 mt-5">
-          No credit card required · Free plan available
+        <p className="text-center text-xs text-zinc-700 mt-5 tracking-wide">
+          No credit card required &nbsp;·&nbsp; Free plan available
         </p>
       </motion.div>
     </div>

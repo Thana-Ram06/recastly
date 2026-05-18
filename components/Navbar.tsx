@@ -9,21 +9,21 @@ import { useAuthContext } from '@/components/providers/AuthProvider';
 import { cn } from '@/utils/helpers';
 
 const navLinks = [
-  { label: 'Features',    href: '/#features' },
+  { label: 'Features',     href: '/#features' },
   { label: 'How it works', href: '/#how-it-works' },
-  { label: 'Pricing',     href: '/#pricing' },
+  { label: 'Pricing',      href: '/#pricing' },
 ];
 
 function Logo() {
   return (
     <Link href="/" className="flex items-center gap-2.5 group">
-      <div className="relative h-7 w-7 rounded-lg overflow-hidden bg-brand-600 flex items-center justify-center shadow-glow-sm">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-          <path d="M3 13L8 3L13 13" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-          <path d="M5 10H11" stroke="white" strokeWidth="1.8" strokeLinecap="round"/>
+      <div className="relative h-7 w-7 rounded-lg overflow-hidden bg-gradient-to-b from-brand-500 to-brand-600 flex items-center justify-center shadow-glow-sm">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
+          <path d="M3 13L8 3L13 13" stroke="white" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"/>
+          <path d="M5 10H11" stroke="white" strokeWidth="1.75" strokeLinecap="round"/>
         </svg>
       </div>
-      <span className="text-sm font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
+      <span className="text-sm font-semibold tracking-tight text-zinc-900 dark:text-zinc-100 group-hover:text-zinc-700 dark:group-hover:text-white transition-colors">
         Recastly
       </span>
     </Link>
@@ -36,7 +36,7 @@ export function Navbar() {
   const { user } = useAuthContext();
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
+    const onScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
@@ -44,22 +44,22 @@ export function Navbar() {
   return (
     <header
       className={cn(
-        'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
+        'fixed top-0 left-0 right-0 z-50 transition-all duration-500',
         scrolled
-          ? 'glass bg-white/75 dark:bg-zinc-950/80 border-b border-zinc-200/50 dark:border-white/5'
+          ? 'glass bg-white/70 dark:bg-[#0c0c12]/85 border-b border-zinc-200/40 dark:border-white/[0.06]'
           : 'bg-transparent'
       )}
     >
-      <nav className="max-w-6xl mx-auto px-5 h-14 flex items-center justify-between">
+      <nav className="max-w-6xl mx-auto px-5 h-16 flex items-center justify-between">
         <Logo />
 
         {/* Desktop links */}
-        <div className="hidden md:flex items-center gap-1">
+        <div className="hidden md:flex items-center gap-0.5">
           {navLinks.map((l) => (
             <Link
               key={l.href}
               href={l.href}
-              className="px-3 py-1.5 text-sm text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 rounded-md hover:bg-zinc-100/60 dark:hover:bg-white/5 transition-all"
+              className="px-3.5 py-2 text-sm text-zinc-500 dark:text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200 rounded-lg hover:bg-zinc-100/70 dark:hover:bg-white/[0.05] transition-all duration-200"
             >
               {l.label}
             </Link>
@@ -86,7 +86,7 @@ export function Navbar() {
 
         {/* Mobile toggle */}
         <button
-          className="md:hidden h-8 w-8 flex items-center justify-center rounded-lg text-zinc-500 hover:bg-zinc-100 dark:hover:bg-white/8 transition-all"
+          className="md:hidden h-8 w-8 flex items-center justify-center rounded-lg text-zinc-500 hover:bg-zinc-100 dark:hover:bg-white/[0.07] transition-all"
           onClick={() => setMobileOpen(!mobileOpen)}
         >
           {mobileOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
@@ -99,14 +99,15 @@ export function Navbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden glass bg-white/90 dark:bg-zinc-950/90 border-b border-zinc-200/50 dark:border-white/5"
+            transition={{ duration: 0.2 }}
+            className="md:hidden glass bg-white/90 dark:bg-[#0c0c12]/95 border-b border-zinc-200/40 dark:border-white/[0.06]"
           >
             <div className="px-5 py-4 space-y-0.5">
               {navLinks.map((l) => (
                 <Link
                   key={l.href}
                   href={l.href}
-                  className="flex items-center py-2.5 px-3 rounded-lg text-sm text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-white/5 transition-colors"
+                  className="flex items-center py-2.5 px-3 rounded-xl text-sm text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-white/[0.05] transition-colors"
                   onClick={() => setMobileOpen(false)}
                 >
                   {l.label}

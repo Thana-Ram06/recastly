@@ -57,13 +57,13 @@ export default function HistoryPage() {
         {loading ? (
           <div className="space-y-2.5">
             {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="h-16 rounded-xl border border-white/6 bg-zinc-900/60 shimmer" />
+              <div key={i} className="h-16 rounded-xl shimmer" style={{ background: '#111118', border: '1px solid rgba(255,255,255,0.07)' }} />
             ))}
           </div>
         ) : generations.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-24 text-center">
-            <div className="h-12 w-12 rounded-xl border border-white/6 bg-white/3 flex items-center justify-center mb-4">
-              <Clock className="h-5 w-5 text-zinc-700" />
+            <div className="h-14 w-14 rounded-2xl flex items-center justify-center mb-5" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}>
+              <Clock className="h-6 w-6 text-zinc-700" />
             </div>
             <h3 className="text-sm font-medium text-zinc-400 mb-1">No history yet</h3>
             <p className="text-xs text-zinc-600 max-w-xs leading-relaxed">
@@ -79,7 +79,10 @@ export default function HistoryPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.04 }}
                 onClick={() => setSelected(selected?.id === gen.id ? null : gen)}
-                className="rounded-xl border border-white/6 bg-zinc-900/60 p-4 cursor-pointer hover:border-white/10 hover:bg-zinc-900/80 transition-all"
+                className="rounded-xl p-4 cursor-pointer transition-all duration-200"
+                style={{ background: '#111118', border: '1px solid rgba(255,255,255,0.07)' }}
+                onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.12)'; }}
+                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.07)'; }}
               >
                 <div className="flex items-start gap-3">
                   <div className="h-7 w-7 rounded-lg bg-red-950/40 border border-red-900/30 flex items-center justify-center shrink-0 mt-0.5">
@@ -118,16 +121,16 @@ export default function HistoryPage() {
                     className="mt-4 pt-4 border-t border-white/5 grid grid-cols-1 sm:grid-cols-2 gap-2.5"
                   >
                     {gen.linkedinPosts[0] && (
-                      <div className="rounded-lg border border-white/5 bg-zinc-800/40 p-3">
-                        <p className="text-[10px] font-semibold text-blue-400 mb-1.5 uppercase tracking-wider">LinkedIn</p>
+                      <div className="rounded-xl p-3" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
+                        <p className="text-[10px] font-semibold text-blue-400 mb-1.5 uppercase tracking-[0.1em]">LinkedIn</p>
                         <p className="text-xs text-zinc-500 leading-relaxed line-clamp-4">
                           {gen.linkedinPosts[0]}
                         </p>
                       </div>
                     )}
                     {gen.newsletter && (
-                      <div className="rounded-lg border border-white/5 bg-zinc-800/40 p-3">
-                        <p className="text-[10px] font-semibold text-violet-400 mb-1.5 uppercase tracking-wider">Newsletter</p>
+                      <div className="rounded-xl p-3" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
+                        <p className="text-[10px] font-semibold text-violet-400 mb-1.5 uppercase tracking-[0.1em]">Newsletter</p>
                         <p className="text-xs text-zinc-500 leading-relaxed line-clamp-4">
                           {gen.newsletter}
                         </p>

@@ -79,8 +79,8 @@ export default function SettingsPage() {
         <h1 className="text-sm font-semibold text-zinc-300 mb-5">Settings</h1>
 
         {/* Profile */}
-        <section className="rounded-xl border border-white/6 bg-zinc-900/60 overflow-hidden">
-          <div className="flex items-center gap-2 px-4 py-3 border-b border-white/5">
+        <section className="rounded-xl overflow-hidden" style={{ background: '#111118', border: '1px solid rgba(255,255,255,0.07)' }}>
+          <div className="flex items-center gap-2 px-4 py-3" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
             <User className="h-3.5 w-3.5 text-zinc-600" />
             <h2 className="text-xs font-semibold text-zinc-400">Profile</h2>
           </div>
@@ -103,8 +103,8 @@ export default function SettingsPage() {
         </section>
 
         {/* Billing */}
-        <section className="rounded-xl border border-white/6 bg-zinc-900/60 overflow-hidden">
-          <div className="flex items-center gap-2 px-4 py-3 border-b border-white/5">
+        <section className="rounded-xl overflow-hidden" style={{ background: '#111118', border: '1px solid rgba(255,255,255,0.07)' }}>
+          <div className="flex items-center gap-2 px-4 py-3" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
             <Crown className="h-3.5 w-3.5 text-amber-400" />
             <h2 className="text-xs font-semibold text-zinc-400">Billing & Plan</h2>
             <span className={cn(
@@ -126,7 +126,10 @@ export default function SettingsPage() {
                   <button
                     onClick={() => handleUpgrade('starter')}
                     disabled={isUpgrading}
-                    className="rounded-lg border border-white/8 bg-white/3 p-4 text-left hover:border-white/14 hover:bg-white/5 transition-all"
+                    className="rounded-xl p-4 text-left transition-all duration-200"
+                    style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)' }}
+                    onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.05)'; }}
+                    onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.03)'; }}
                   >
                     <p className="text-xs font-semibold text-zinc-300">Starter</p>
                     <p className="text-xl font-bold text-zinc-100 my-1.5">$9<span className="text-xs font-normal text-zinc-600">/mo</span></p>
@@ -135,7 +138,8 @@ export default function SettingsPage() {
                   <button
                     onClick={() => handleUpgrade('pro')}
                     disabled={isUpgrading}
-                    className="rounded-lg border border-brand-500/40 bg-brand-600/10 p-4 text-left hover:border-brand-500/60 hover:bg-brand-600/15 transition-all"
+                    className="rounded-xl p-4 text-left transition-all duration-200"
+                    style={{ background: 'rgba(124,92,252,0.08)', border: '1px solid rgba(124,92,252,0.3)' }}
                   >
                     <p className="text-xs font-semibold text-brand-400">Pro</p>
                     <p className="text-xl font-bold text-zinc-100 my-1.5">$29<span className="text-xs font-normal text-zinc-600">/mo</span></p>
@@ -199,7 +203,8 @@ export default function SettingsPage() {
             <motion.div
               initial={{ scale: 0.96, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              className="w-full max-w-md bg-zinc-900 rounded-xl border border-white/8 p-6"
+              className="w-full max-w-md rounded-2xl p-6"
+            style={{ background: '#111118', border: '1px solid rgba(255,255,255,0.09)', boxShadow: '0 24px 64px rgba(0,0,0,0.6)' }}
             >
               <h3 className="text-base font-semibold text-zinc-100 mb-2">Delete your account?</h3>
               <p className="text-xs text-zinc-500 mb-5 leading-relaxed">
@@ -211,7 +216,8 @@ export default function SettingsPage() {
                 value={deleteConfirm}
                 onChange={(e) => setDeleteConfirm(e.target.value)}
                 placeholder="DELETE"
-                className="w-full h-9 px-3 rounded-lg border border-white/8 bg-white/4 text-zinc-100 text-sm outline-none focus:border-red-500/60 mb-4 placeholder:text-zinc-700"
+                className="w-full h-9 px-3 rounded-xl text-zinc-100 text-sm outline-none mb-4 placeholder:text-zinc-700 transition-all"
+                style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}
               />
               <div className="flex gap-2">
                 <Button variant="outline" className="flex-1" onClick={() => setShowDeleteDialog(false)}>Cancel</Button>

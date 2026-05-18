@@ -23,6 +23,8 @@ const tabs: {
   title: string;
   icon: IconComponent;
   iconColor: string;
+  activeBg: string;
+  activeBorder: string;
   getContents: (g: Generation) => string[];
 }[] = [
   {
@@ -30,6 +32,8 @@ const tabs: {
     title: 'LinkedIn',
     icon: LinkedinIcon,
     iconColor: 'text-blue-400',
+    activeBg: 'bg-blue-500/10',
+    activeBorder: 'border-blue-500/20',
     getContents: (g) => g.linkedinPosts,
   },
   {
@@ -37,6 +41,8 @@ const tabs: {
     title: 'X / Twitter',
     icon: XIcon,
     iconColor: 'text-zinc-300',
+    activeBg: 'bg-zinc-500/10',
+    activeBorder: 'border-zinc-500/15',
     getContents: (g) => g.twitterThreads.map((t) => t.join('\n\n')),
   },
   {
@@ -44,6 +50,8 @@ const tabs: {
     title: 'Newsletter',
     icon: Mail,
     iconColor: 'text-violet-400',
+    activeBg: 'bg-violet-500/10',
+    activeBorder: 'border-violet-500/20',
     getContents: (g) => [g.newsletter],
   },
   {
@@ -51,6 +59,8 @@ const tabs: {
     title: 'Instagram',
     icon: InstagramIcon,
     iconColor: 'text-pink-400',
+    activeBg: 'bg-pink-500/10',
+    activeBorder: 'border-pink-500/20',
     getContents: (g) => g.instagramCaptions,
   },
 ];
@@ -94,7 +104,7 @@ export default function DashboardPage() {
     <div className="flex flex-col min-h-screen">
       <TopNav title="Dashboard" />
 
-      <main className="flex-1 px-4 sm:px-6 py-6 max-w-3xl w-full mx-auto space-y-5">
+      <main className="flex-1 px-4 sm:px-6 py-7 max-w-3xl w-full mx-auto space-y-5">
         {/* Usage */}
         <UsageStats />
 
@@ -112,7 +122,8 @@ export default function DashboardPage() {
               initial={{ opacity: 0, y: -4 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
-              className="rounded-lg border border-red-500/20 bg-red-500/8 px-4 py-3 text-xs text-red-400"
+              className="rounded-xl px-4 py-3 text-xs text-red-400"
+              style={{ background: 'rgba(239,68,68,0.07)', border: '1px solid rgba(239,68,68,0.2)' }}
             >
               {error}
             </motion.div>
@@ -129,24 +140,24 @@ export default function DashboardPage() {
               transition={{ duration: 0.35 }}
             >
               {/* Section header */}
-              <div className="mb-3">
-                <h2 className="text-xs font-semibold text-zinc-600 uppercase tracking-wider">
+              <div className="mb-4">
+                <h2 className="text-xs font-semibold text-zinc-600 uppercase tracking-[0.1em]">
                   {isGenerating ? 'Generating…' : (generation?.videoTitle || 'Generated content')}
                 </h2>
               </div>
 
               {/* Platform tabs */}
               {!isGenerating && (
-                <div className="flex items-center gap-1 mb-4 border-b border-white/5 pb-0">
-                  {tabs.map(({ key, title, icon: Icon, iconColor }) => (
+                <div className="flex items-center gap-1 mb-4">
+                  {tabs.map(({ key, title, icon: Icon, iconColor, activeBg, activeBorder }) => (
                     <button
                       key={key}
                       onClick={() => setActiveTab(key)}
                       className={cn(
-                        'flex items-center gap-1.5 px-3 py-2 text-xs font-medium border-b-2 -mb-px transition-all',
+                        'flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium border transition-all duration-200',
                         activeTab === key
-                          ? 'border-brand-500 text-zinc-100'
-                          : 'border-transparent text-zinc-600 hover:text-zinc-400 hover:border-zinc-700'
+                          ? `${activeBg} ${activeBorder} text-zinc-100`
+                          : 'border-transparent text-zinc-600 hover:text-zinc-300 hover:bg-white/[0.05]'
                       )}
                     >
                       <Icon className={cn('h-3 w-3', activeTab === key ? iconColor : '')} />
@@ -204,12 +215,15 @@ export default function DashboardPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
-            className="flex flex-col items-center justify-center py-24 text-center"
+            className="flex flex-col items-center justify-center py-28 text-center"
           >
-            <div className="h-12 w-12 rounded-xl border border-white/6 bg-white/3 flex items-center justify-center mb-4">
-              <YoutubeIcon className="h-5 w-5 text-zinc-700" />
+            <div
+              className="h-14 w-14 rounded-2xl flex items-center justify-center mb-5"
+              style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}
+            >
+              <YoutubeIcon className="h-6 w-6 text-zinc-700" />
             </div>
-            <h3 className="text-sm font-medium text-zinc-400 mb-1">No content yet</h3>
+            <h3 className="text-sm font-semibold text-zinc-400 mb-2 tracking-[-0.01em]">No content yet</h3>
             <p className="text-xs text-zinc-600 max-w-xs leading-relaxed">
               Paste a YouTube URL above to generate LinkedIn posts, X threads, a newsletter, and Instagram captions.
             </p>

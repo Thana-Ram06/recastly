@@ -7,31 +7,27 @@
     --font-inter: 'Inter', system-ui, sans-serif;
     --font-instrument-serif: 'Instrument Serif', Georgia, serif;
 
-    /* Light mode tokens */
-    --bg:          255 255 255;
-    --surface:     249 249 251;
-    --surface-2:   243 244 246;
-    --border:      229 231 235;
-    --border-sub:  243 244 246;
-    --text-1:      9 9 11;
-    --text-2:      82 82 91;
-    --text-3:      161 161 170;
+    --bg:         255 255 255;
+    --surface:    249 249 251;
+    --surface-2:  243 244 246;
+    --border:     229 231 235;
+    --border-sub: 243 244 246;
+    --text-1:     9   9   11;
+    --text-2:     82  82  91;
+    --text-3:     161 161 170;
   }
 
   .dark {
-    --bg:          9 9 11;
-    --surface:     14 14 18;
-    --surface-2:   24 24 27;
-    --border:      39 39 42;
-    --border-sub:  30 30 34;
-    --text-1:      244 244 245;
-    --text-2:      161 161 170;
-    --text-3:      82 82 91;
+    --bg:         12  12  18;
+    --surface:    17  17  24;
+    --surface-2:  23  23  31;
+    --surface-3:  30  30  44;
+    --text-1:     244 244 245;
+    --text-2:     161 161 170;
+    --text-3:     82  82  91;
   }
 
-  * {
-    box-sizing: border-box;
-  }
+  * { box-sizing: border-box; }
 
   html {
     -webkit-font-smoothing: antialiased;
@@ -41,11 +37,16 @@
   }
 
   body {
-    @apply bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 font-sans;
+    @apply font-sans text-zinc-900 dark:text-zinc-100;
+    background-color: #f9f9fb;
+  }
+
+  html.dark body {
+    background-color: #0c0c12;
   }
 
   ::selection {
-    background: rgba(139, 92, 246, 0.2);
+    background: rgba(124, 92, 252, 0.25);
     color: #c4b5fd;
   }
 
@@ -53,11 +54,10 @@
     @apply outline-none ring-2 ring-brand-500 ring-offset-2 ring-offset-white dark:ring-offset-zinc-950;
   }
 
-  /* Custom scrollbar */
   ::-webkit-scrollbar { width: 5px; height: 5px; }
   ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 99px; }
-  ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.14); }
+  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.09); border-radius: 99px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.15); }
 }
 
 @layer utilities {
@@ -69,18 +69,17 @@
   }
   .scrollbar-none::-webkit-scrollbar { display: none; }
 
-  /* Fine dot grid — like Linear */
+  /* Linear-style dot grid */
   .bg-dot-grid {
-    background-image: radial-gradient(circle, rgba(255,255,255,0.12) 1px, transparent 1px);
-    background-size: 24px 24px;
+    background-image: radial-gradient(circle, rgba(0,0,0,0.045) 1px, transparent 1px);
+    background-size: 28px 28px;
   }
-  .light .bg-dot-grid,
-  :not(.dark) .bg-dot-grid {
-    background-image: radial-gradient(circle, rgba(0,0,0,0.06) 1px, transparent 1px);
-    background-size: 24px 24px;
+  html.dark .bg-dot-grid {
+    background-image: radial-gradient(circle, rgba(255,255,255,0.07) 1px, transparent 1px);
+    background-size: 28px 28px;
   }
 
-  /* Shimmer loading effect */
+  /* Shimmer loading */
   .shimmer {
     position: relative;
     overflow: hidden;
@@ -90,39 +89,56 @@
     position: absolute;
     inset: 0;
     background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.04) 50%, transparent 100%);
-    animation: shimmer 1.8s linear infinite;
+    animation: shimmer 2s linear infinite;
   }
 
-  /* Gradient border utility */
+  /* Gradient border — premium card treatment */
   .gradient-border {
-    background: linear-gradient(rgb(var(--surface-2)), rgb(var(--surface-2))) padding-box,
-                linear-gradient(135deg, rgba(139,92,246,0.6), rgba(167,139,250,0.3), rgba(139,92,246,0.1)) border-box;
+    background:
+      linear-gradient(rgb(var(--surface)), rgb(var(--surface))) padding-box,
+      linear-gradient(135deg, rgba(124,92,252,0.65), rgba(155,135,253,0.35), rgba(91,140,255,0.2), rgba(124,92,252,0.1)) border-box;
+    border: 1px solid transparent;
+  }
+
+  /* Subtle gradient border for secondary cards */
+  .gradient-border-subtle {
+    background:
+      linear-gradient(rgb(var(--surface)), rgb(var(--surface))) padding-box,
+      linear-gradient(135deg, rgba(255,255,255,0.11), rgba(255,255,255,0.04)) border-box;
     border: 1px solid transparent;
   }
 
   /* Frosted glass */
   .glass {
-    backdrop-filter: blur(16px) saturate(150%);
-    -webkit-backdrop-filter: blur(16px) saturate(150%);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
   }
 
-  /* Text gradient */
+  /* Brand gradient text — purple → indigo */
   .text-gradient {
-    background: linear-gradient(135deg, #c4b5fd 0%, #8b5cf6 50%, #a78bfa 100%);
+    background: linear-gradient(135deg, #b9a8ff 0%, #7c5cfc 42%, #5b8cff 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
   .text-gradient-white {
-    background: linear-gradient(180deg, #ffffff 0%, rgba(255,255,255,0.75) 100%);
+    background: linear-gradient(180deg, #ffffff 0%, rgba(255,255,255,0.70) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
-  /* Surface colors via CSS vars */
+  /* Surface utilities via CSS vars */
   .bg-surface   { background: rgb(var(--surface)); }
   .bg-surface-2 { background: rgb(var(--surface-2)); }
-  .border-token { border-color: rgb(var(--border)); }
+  .bg-surface-3 { background: rgb(var(--surface-3)); }
+  .border-token { border-color: rgba(255,255,255,0.07); }
+
+  /* Premium icon container backgrounds */
+  .icon-bg-brand  { background: linear-gradient(135deg, rgba(124,92,252,0.2), rgba(124,92,252,0.08)); }
+  .icon-bg-blue   { background: linear-gradient(135deg, rgba(59,130,246,0.2), rgba(59,130,246,0.08)); }
+  .icon-bg-violet { background: linear-gradient(135deg, rgba(139,92,246,0.2), rgba(139,92,246,0.08)); }
+  .icon-bg-pink   { background: linear-gradient(135deg, rgba(236,72,153,0.2), rgba(236,72,153,0.08)); }
+  .icon-bg-zinc   { background: linear-gradient(135deg, rgba(113,113,122,0.18), rgba(113,113,122,0.07)); }
 }

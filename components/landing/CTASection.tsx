@@ -7,26 +7,50 @@ import { Button } from '@/components/ui/Button';
 
 export function CTASection() {
   return (
-    <section className="py-24 px-5 sm:px-6">
+    <section className="py-28 px-5 sm:px-6">
       <div className="max-w-5xl mx-auto">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="relative rounded-2xl border border-white/8 bg-gradient-to-br from-zinc-900 to-zinc-950 overflow-hidden p-12 text-center"
+          transition={{ duration: 0.6 }}
+          className="relative rounded-3xl overflow-hidden"
+          style={{
+            background: 'linear-gradient(135deg, #111118 0%, #0f0f1a 50%, #0c0c12 100%)',
+            border: '1px solid rgba(124,92,252,0.2)',
+            boxShadow: '0 0 0 1px rgba(124,92,252,0.12), 0 40px 80px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05)',
+          }}
         >
-          {/* Glow */}
+          {/* Glow overlay */}
           <div
             aria-hidden
-            className="pointer-events-none absolute top-0 left-0 right-0 h-48 bg-hero-glow-sm opacity-60"
+            className="pointer-events-none absolute top-0 left-0 right-0 h-56"
+            style={{ background: 'radial-gradient(ellipse 70% 50% at 50% -10%, rgba(124,92,252,0.2), transparent 70%)' }}
+          />
+          {/* Dot grid */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 bg-dot-grid opacity-60"
           />
 
-          <div className="relative z-10">
-            <h2 className="font-serif text-4xl sm:text-5xl text-zinc-100 leading-[1.08] tracking-tight mb-4">
+          <div className="relative z-10 px-8 py-16 sm:px-16 sm:py-20 text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.15 }}
+              className="flex justify-center mb-8"
+            >
+              <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-[11px] font-medium bg-brand-500/12 text-brand-300 border border-brand-500/20 tracking-wide">
+                <span className="h-1.5 w-1.5 rounded-full bg-brand-400 animate-pulse-slow" />
+                Start generating today
+              </span>
+            </motion.div>
+
+            <h2 className="font-serif text-4xl sm:text-5xl md:text-[56px] text-zinc-100 leading-[1.05] tracking-[-0.025em] mb-5">
               Start repurposing today.
             </h2>
-            <p className="text-zinc-400 mb-8 max-w-sm mx-auto">
+            <p className="text-zinc-500 mb-10 max-w-sm mx-auto text-[15px] leading-relaxed">
               One video. Every platform. Under 30 seconds. No credit card needed.
             </p>
             <Link href="/login">

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, Minus } from 'lucide-react';
+import { Plus } from 'lucide-react';
 
 const faqs = [
   {
@@ -11,7 +11,7 @@ const faqs = [
   },
   {
     q: 'How long does generation take?',
-    a: 'Usually under 30 seconds. We send all four platform requests to Gemini AI in parallel, so you get everything at once — not one at a time.',
+    a: 'Usually under 30 seconds. We send all four platform requests to Claude AI in parallel, so you get everything at once — not one at a time.',
   },
   {
     q: 'Does the output actually sound human?',
@@ -43,18 +43,20 @@ function FAQItem({ q, a }: { q: string; a: string }) {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="border-b border-white/5 last:border-none">
+    <div className="border-b border-white/[0.06] last:border-none">
       <button
         onClick={() => setOpen(!open)}
-        className="w-full flex items-start justify-between gap-4 py-5 text-left"
+        className="w-full flex items-start justify-between gap-6 py-5 text-left group"
       >
-        <span className="text-sm font-medium text-zinc-200">{q}</span>
-        <div className="shrink-0 h-5 w-5 rounded-full border border-white/10 bg-white/4 flex items-center justify-center mt-0.5">
-          {open ? (
-            <Minus className="h-2.5 w-2.5 text-zinc-400" />
-          ) : (
-            <Plus className="h-2.5 w-2.5 text-zinc-400" />
-          )}
+        <span className="text-sm font-medium text-zinc-300 group-hover:text-zinc-100 transition-colors leading-relaxed tracking-[-0.01em]">
+          {q}
+        </span>
+        <div className={`shrink-0 h-5 w-5 rounded-full border flex items-center justify-center mt-0.5 transition-all duration-200 ${
+          open
+            ? 'border-brand-500/40 bg-brand-500/15 rotate-45'
+            : 'border-white/[0.1] bg-white/[0.04]'
+        }`}>
+          <Plus className={`h-2.5 w-2.5 transition-colors ${open ? 'text-brand-400' : 'text-zinc-500'}`} />
         </div>
       </button>
       <AnimatePresence initial={false}>
@@ -63,7 +65,7 @@ function FAQItem({ q, a }: { q: string; a: string }) {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.22, ease: 'easeInOut' }}
+            transition={{ duration: 0.24, ease: [0.4, 0, 0.2, 1] }}
             className="overflow-hidden"
           >
             <p className="pb-5 text-sm text-zinc-500 leading-relaxed">{a}</p>
@@ -76,19 +78,20 @@ function FAQItem({ q, a }: { q: string; a: string }) {
 
 export function FAQ() {
   return (
-    <section className="py-24 px-4 sm:px-6">
+    <section className="py-28 px-4 sm:px-6">
       <div className="max-w-2xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="text-center mb-12"
+          className="text-center mb-14"
         >
-          <p className="text-xs font-semibold text-zinc-600 uppercase tracking-widest mb-4">
-            FAQ
-          </p>
-          <h2 className="font-serif text-4xl sm:text-5xl text-zinc-100 tracking-tight">
+          <div className="flex items-center justify-center gap-2 mb-4">
+            <div className="h-1.5 w-1.5 rounded-full bg-brand-400 animate-pulse-slow" />
+            <p className="text-xs font-semibold text-brand-400 uppercase tracking-[0.12em]">FAQ</p>
+          </div>
+          <h2 className="font-serif text-4xl sm:text-[52px] text-zinc-100 tracking-[-0.02em] leading-[1.06]">
             Questions answered
           </h2>
         </motion.div>
@@ -97,8 +100,8 @@ export function FAQ() {
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ delay: 0.15, duration: 0.45 }}
-          className="rounded-xl border border-white/6 bg-zinc-900/60 px-6"
+          transition={{ delay: 0.12, duration: 0.45 }}
+          className="rounded-2xl border border-white/[0.07] bg-[#111118] px-6 sm:px-8"
         >
           {faqs.map((faq) => (
             <FAQItem key={faq.q} {...faq} />

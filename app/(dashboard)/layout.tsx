@@ -24,7 +24,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   if (!user) return null;
 
   return (
-    <div className="min-h-screen bg-zinc-950">
+    <div className="min-h-screen" style={{ background: '#0c0c12' }}>
       <Sidebar />
       <div className="lg:pl-56">
         {children}
