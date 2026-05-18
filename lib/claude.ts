@@ -12,12 +12,16 @@ import {
   parseInstagramCaptions,
 } from '@/utils/helpers';
 
-// Model is configurable via env — falls back to a known-stable model.
-// If you want Gemini 2.5 Flash, set GEMINI_MODEL=gemini-2.5-flash-preview-05-20
-// or the current stable alias in your .env.local.
-const MODEL = process.env.GEMINI_MODEL || 'gemini-2.0-flash';
+// gemini-2.5-flash is confirmed free-tier on this key.
+// gemini-2.0-flash has free-tier limit: 0 (billing required).
+const MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
 
 const API_KEY = process.env.GOOGLE_AI_API_KEY ?? '';
+
+// Log startup state on first module load — safe to see in server logs.
+console.log(
+  `[gemini] init — model="${MODEL}" key_set=${!!API_KEY && API_KEY !== 'build-placeholder'} key_len=${API_KEY.length}`
+);
 
 if (!API_KEY || API_KEY === 'build-placeholder') {
   console.warn('[gemini] WARNING: GOOGLE_AI_API_KEY is not set — generation will fail at runtime');
@@ -39,31 +43,76 @@ function mapGeminiError(err: unknown, label: string): Error {
   if (!(err instanceof Error)) {
     return new Error(`AI generation failed (${label}). Please try again.`);
   }
+
   const msg = err.message;
 
-  // gRPC status code 5 = NOT_FOUND → wrong model name
-  if (msg.startsWith('5 ') || msg.includes('NOT_FOUND')) {
+  // The @google/generative-ai SDK wraps errors as:
+  //   "Error fetching from <url>: [<httpStatus> <httpText>] <apiMessage>"
+  // We match on HTTP status codes AND on legacy gRPC-style codes (e.g. "5 NOT_FOUND")
+  // so both old and new SDK versions are covered.
+
+  // 404 / gRPC 5 = NOT_FOUND → wrong model name
+  if (
+    msg.includes('[404') ||
+    msg.includes('NOT_FOUND') ||
+    msg.includes('not found') ||
+    msg.startsWith('5 ')
+  ) {
     return new Error(
       `AI model "${MODEL}" was not found. ` +
-      `Set GEMINI_MODEL in your .env.local to a valid Gemini model name (e.g. gemini-2.0-flash).`
+      `Set GEMINI_MODEL in your .env.local to a valid name ` +
+      `(e.g. gemini-2.5-flash). Current value: "${MODEL}".`
     );
   }
-  // gRPC status code 7 = PERMISSION_DENIED, 16 = UNAUTHENTICATED
-  if (msg.startsWith('7 ') || msg.startsWith('16 ') || msg.includes('PERMISSION_DENIED') || msg.includes('UNAUTHENTICATED') || msg.includes('API_KEY')) {
-    return new Error('Google AI API key is invalid or missing. Check GOOGLE_AI_API_KEY in your .env.local.');
+
+  // 401 / 403 / gRPC 7 = PERMISSION_DENIED, gRPC 16 = UNAUTHENTICATED → bad API key
+  if (
+    msg.includes('[401') ||
+    msg.includes('[403') ||
+    msg.includes('PERMISSION_DENIED') ||
+    msg.includes('UNAUTHENTICATED') ||
+    msg.includes('API_KEY') ||
+    msg.includes('API key') ||
+    msg.startsWith('7 ') ||
+    msg.startsWith('16 ')
+  ) {
+    return new Error(
+      'Google AI API key is invalid or missing. Check GOOGLE_AI_API_KEY in your .env.local.'
+    );
   }
-  // gRPC status code 8 = RESOURCE_EXHAUSTED (quota)
-  if (msg.startsWith('8 ') || msg.includes('RESOURCE_EXHAUSTED') || msg.includes('QUOTA')) {
-    return new Error('Google AI API quota exceeded. Please try again later or check your Gemini API plan.');
+
+  // 429 / gRPC 8 = RESOURCE_EXHAUSTED → quota or free-tier limit
+  if (
+    msg.includes('[429') ||
+    msg.includes('RESOURCE_EXHAUSTED') ||
+    msg.includes('quota') ||
+    msg.includes('Quota') ||
+    msg.includes('rate limit') ||
+    msg.includes('Too Many Requests') ||
+    msg.startsWith('8 ')
+  ) {
+    return new Error(
+      `Google AI quota exceeded for model "${MODEL}". ` +
+      `The free tier for this model may have a limit of 0 (billing required). ` +
+      `Try switching GEMINI_MODEL to gemini-2.5-flash or gemini-2.5-flash-lite.`
+    );
   }
-  // gRPC status code 4 = DEADLINE_EXCEEDED
-  if (msg.startsWith('4 ') || msg.includes('DEADLINE_EXCEEDED')) {
+
+  // 504 / gRPC 4 = DEADLINE_EXCEEDED → timeout
+  if (
+    msg.includes('[504') ||
+    msg.includes('DEADLINE_EXCEEDED') ||
+    msg.includes('timed out') ||
+    msg.startsWith('4 ')
+  ) {
     return new Error('AI generation timed out. Please try with a shorter video.');
   }
+
   // Catch-all for remaining raw gRPC codes like "3 INVALID_ARGUMENT: ..."
   if (/^\d+ [A-Z_]+/.test(msg)) {
     return new Error(`AI generation failed: ${msg}`);
   }
+
   return err;
 }
 
@@ -84,7 +133,7 @@ async function callGemini(prompt: string, label: string): Promise<string> {
     console.log(`[gemini] ${label} done in ${Date.now() - start}ms (response length=${text.length})`);
     return text;
   } catch (err) {
-    console.error(`[gemini] ${label} failed after ${Date.now() - start}ms:`, err);
+    console.error(`[gemini] ${label} failed after ${Date.now() - start}ms:`, err instanceof Error ? err.message : err);
     throw mapGeminiError(err, label);
   }
 }
